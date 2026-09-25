@@ -1,751 +1,1247 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Gift Journey Crafter Pro</title>
-    <!-- Tailwind CSS & Lucide Icons -->
+    <title>KadoKita Ultra Edition ✨ - Digital Gift & Celebration Platform</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts Collection -->
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@500;600&family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Press+Start+2P&family=Sacramento&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            pink: '#ec4899',
+                            rose: '#f43f5e',
+                            purple: '#8b5cf6',
+                            gold: '#f59e0b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        handwriting: ['"Caveat"', 'cursive'],
+                        script: ['"Dancing Script"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8f9; }
-        
-        /* Font Class Presets */
-        .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .font-handwriting { font-family: 'Caveat', cursive; }
-        .font-romantic { font-family: 'Sacramento', cursive; }
-        .font-serif-custom { font-family: 'Playfair Display', serif; }
-        .font-pixel { font-family: 'Press Start 2P', cursive; }
-        .font-cartoon { font-family: 'Fredoka', sans-serif; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #fff1f2; }
-        ::-webkit-scrollbar-thumb { background: #fda4af; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f43f5e; }
-
-        #particleCanvas {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 5;
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0c1b 0%, #1a102f 50%, #2b092b 100%);
+            --card-bg: rgba(255, 255, 255, 0.07);
+            --card-border: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --accent-glow: rgba(236, 72, 153, 0.5);
+            --btn-gradient: linear-gradient(90deg, #ec4899, #8b5cf6, #f59e0b);
         }
+
+        .theme-midnight {
+            --bg-gradient: linear-gradient(135deg, #090a0f 0%, #0f172a 50%, #1e1b4b 100%);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --btn-gradient: linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6);
+        }
+
+        .theme-romantic {
+            --bg-gradient: linear-gradient(135deg, #2a0813 0%, #4c0519 50%, #881337 100%);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(254, 205, 211, 0.25);
+            --text-primary: #fff1f2;
+            --accent-glow: rgba(244, 63, 94, 0.6);
+            --btn-gradient: linear-gradient(90deg, #f43f5e, #fb7185, #f59e0b);
+        }
+
+        .theme-candy {
+            --bg-gradient: linear-gradient(135deg, #18002e 0%, #31004a 50%, #6b005b 100%);
+            --card-bg: rgba(255, 255, 255, 0.12);
+            --card-border: rgba(249, 168, 212, 0.3);
+            --text-primary: #fdf2f8;
+            --accent-glow: rgba(236, 72, 153, 0.6);
+            --btn-gradient: linear-gradient(90deg, #d946ef, #ec4899, #06b6d4);
+        }
+
+        .theme-vintage {
+            --bg-gradient: linear-gradient(135deg, #1c140d 0%, #2b1d0f 50%, #422a14 100%);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-border: rgba(251, 191, 36, 0.2);
+            --text-primary: #fef3c7;
+            --accent-glow: rgba(245, 158, 11, 0.5);
+            --btn-gradient: linear-gradient(90deg, #d97706, #b45309, #f59e0b);
+        }
+
+        .theme-emerald {
+            --bg-gradient: linear-gradient(135deg, #022c22 0%, #064e3b 50%, #0f5132 100%);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-border: rgba(52, 211, 153, 0.25);
+            --text-primary: #ecfdf5;
+            --accent-glow: rgba(16, 185, 129, 0.5);
+            --btn-gradient: linear-gradient(90deg, #10b981, #059669, #34d399);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            transition: background 0.6s ease, color 0.4s ease;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+        }
+
+        .glass-card-light {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 15px var(--accent-glow)); }
+            50% { filter: drop-shadow(0 0 35px var(--accent-glow)); }
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-float { animation: float 5s ease-in-out infinite; }
+        .animate-glow { animation: pulse-glow 3s ease-in-out infinite; }
+        .animate-spin-slow { animation: spinSlow 10s linear infinite; }
+
+        /* 3D Box */
+        .box-container { perspective: 1000px; }
+        .gift-box-3d {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .gift-box-3d:hover {
+            transform: rotateY(15deg) rotateX(-10deg) scale(1.05);
+        }
+        .gift-lid-3d {
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: top center;
+        }
+        .gift-box-3d.opened .gift-lid-3d {
+            transform: translateY(-130px) rotateX(-120deg) scale(0.9);
+            opacity: 0;
+        }
+
+        /* Polaroid Hover */
+        .polaroid-item {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        .polaroid-item:hover {
+            transform: scale(1.08) rotate(0deg) !important;
+            z-index: 30 !important;
+        }
+
+        /* Memory Card Flip */
+        .memory-card { perspective: 1000px; cursor: pointer; }
+        .memory-card-inner {
+            position: relative;
+            width: 100%; height: 100%;
+            transition: transform 0.5s;
+            transform-style: preserve-3d;
+        }
+        .memory-card.flipped .memory-card-inner { transform: rotateY(180deg); }
+        .memory-card-front, .memory-card-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 1rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .memory-card-back { transform: rotateY(180deg); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 12, 27, 0.6); }
+        ::-webkit-scrollbar-thumb { background: rgba(236, 72, 153, 0.5); border-radius: 10px; }
     </style>
 </head>
-<body class="h-screen w-screen overflow-hidden text-slate-800 flex flex-col">
+<body id="app-body" class="min-h-screen font-sans relative overflow-x-hidden selection:bg-rose-500 selection:text-white pb-16">
 
-    <!-- HEADER / NAVBAR -->
-    <header class="h-16 border-b border-rose-100 bg-white/90 backdrop-blur px-6 flex items-center justify-between z-20 shrink-0 shadow-sm">
-        <div class="flex items-center gap-3">
-            <div class="p-2 bg-rose-500 text-white rounded-xl shadow-md shadow-rose-200">
-                <i data-lucide="gift" class="w-5 h-5"></i>
+    <canvas id="stars-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="relative z-30 max-w-6xl mx-auto p-4 md:p-6 flex items-center justify-between">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="resetToLanding()">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500 via-purple-500 to-amber-400 p-0.5 shadow-lg shadow-rose-500/30">
+                <div class="w-full h-full bg-[#0f0c1b] rounded-[14px] flex items-center justify-center">
+                    <i class="fa-solid fa-gift text-transparent bg-clip-text bg-gradient-to-tr from-rose-400 to-amber-300 text-xl"></i>
+                </div>
             </div>
             <div>
-                <h1 class="font-bold text-slate-900 leading-tight">Gift Crafter Pro</h1>
-                <p class="text-xs text-rose-500 font-medium">Interactive Journey & Memory Studio</p>
+                <span class="font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-purple-300 to-amber-300">
+                    KadoKita
+                </span>
+                <span class="text-[10px] uppercase font-bold tracking-widest text-rose-400 block -mt-1">Ultra Edition ✨</span>
             </div>
         </div>
 
-        <div class="flex items-center gap-3">
-            <!-- Global Audio Player Controller -->
-            <div id="audioPlayerWidget" class="hidden flex items-center gap-2 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-full text-xs text-rose-700">
-                <i data-lucide="music" class="w-3.5 h-3.5 animate-spin"></i>
-                <span id="playingSongTitle" class="font-semibold max-w-[120px] truncate">Lagu Diputar</span>
-                <button onclick="toggleAudioPlay()" class="p-1 hover:bg-rose-200 rounded-full"><i id="playIcon" data-lucide="pause" class="w-3.5 h-3.5"></i></button>
+        <div class="flex items-center space-x-2 md:space-x-3">
+            <!-- Theme Menu Dropdown -->
+            <div class="relative">
+                <button onclick="toggleThemeDropdown()" class="glass-card hover:bg-white/10 px-3 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1.5 border border-white/10 transition">
+                    <i class="fa-solid fa-palette text-amber-400"></i>
+                    <span class="hidden sm:inline">Tema</span>
+                </button>
+                <div id="theme-dropdown" class="hidden absolute right-0 mt-2 w-48 rounded-2xl glass-card border border-white/20 shadow-2xl py-2 z-50 backdrop-blur-2xl">
+                    <button onclick="selectTheme('default')" class="w-full text-left px-4 py-2 text-xs hover:bg-white/10 flex items-center space-x-2 text-rose-300">
+                        <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                        <span>Romantic Pink</span>
+                    </button>
+                    <button onclick="selectTheme('midnight')" class="w-full text-left px-4 py-2 text-xs hover:bg-white/10 flex items-center space-x-2 text-blue-400">
+                        <span class="w-3 h-3 rounded-full bg-blue-600"></span>
+                        <span>Midnight Starlight</span>
+                    </button>
+                    <button onclick="selectTheme('romantic')" class="w-full text-left px-4 py-2 text-xs hover:bg-white/10 flex items-center space-x-2 text-rose-400">
+                        <span class="w-3 h-3 rounded-full bg-rose-700"></span>
+                        <span>Soft Velvet Rose</span>
+                    </button>
+                    <button onclick="selectTheme('candy')" class="w-full text-left px-4 py-2 text-xs hover:bg-white/10 flex items-center space-x-2 text-fuchsia-400">
+                        <span class="w-3 h-3 rounded-full bg-fuchsia-500"></span>
+                        <span>Sweet Candy</span>
+                    </button>
+                    <button onclick="selectTheme('vintage')" class="w-full text-left px-4 py-2 text-xs hover:bg-white/10 flex items-center space-x-2 text-amber-400">
+                        <span class="w-3 h-3 rounded-full bg-amber-600"></span>
+                        <span>Warm Vintage</span>
+                    </button>
+                    <button onclick="selectTheme('emerald')" class="w-full text-left px-4 py-2 text-xs hover:bg-white/10 flex items-center space-x-2 text-emerald-400">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        <span>Emerald Luxury</span>
+                    </button>
+                </div>
             </div>
 
-            <button id="btnPreview" onclick="togglePreviewMode()" class="px-4 py-2 bg-rose-50 text-rose-600 rounded-xl font-medium text-sm hover:bg-rose-100 transition flex items-center gap-2 border border-rose-200">
-                <i data-lucide="eye" class="w-4 h-4"></i>
-                <span id="previewText">Preview Journey</span>
-            </button>
-            <button onclick="exportGiftLink()" class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-medium text-sm shadow-lg shadow-rose-200 transition flex items-center gap-2">
-                <i data-lucide="share-2" class="w-4 h-4"></i>
-                <span>Bagikan Hadiah</span>
+            <!-- Customizer Studio Modal Trigger -->
+            <button onclick="openCustomizerModal()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-rose-500 via-purple-600 to-amber-500 text-white font-bold text-xs md:text-sm shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 transition transform hover:-translate-y-0.5 flex items-center space-x-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span class="hidden sm:inline">Buat & Bagikan Link Kado</span>
+                <span class="sm:hidden">Buat Link</span>
             </button>
         </div>
     </header>
 
-    <!-- MAIN STUDIO WORKSPACE -->
-    <div class="flex-1 flex overflow-hidden relative">
+    <main class="relative z-10 max-w-5xl mx-auto px-4 py-4 md:py-8">
 
-        <!-- LEFT SIDEBAR: LIBRARIES (GAMES, PHOTOS, AUDIO, STYLES) -->
-        <aside id="builderSidebar" class="w-80 border-r border-rose-100 bg-white flex flex-col z-10 shrink-0">
-            <!-- Sidebar Navigation Tabs -->
-            <div class="flex border-b border-slate-100 bg-slate-50/80 p-1 gap-1">
-                <button onclick="switchTab('games')" id="tab-games" class="flex-1 py-2 text-xs font-semibold rounded-lg bg-white text-rose-600 shadow-sm transition">🎮 Game</button>
-                <button onclick="switchTab('photos')" id="tab-photos" class="flex-1 py-2 text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-800 transition">📸 Foto</button>
-                <button onclick="switchTab('audio')" id="tab-audio" class="flex-1 py-2 text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-800 transition">🎵 Lagu</button>
-                <button onclick="switchTab('style')" id="tab-style" class="flex-1 py-2 text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-800 transition">✨ Style</button>
+        <!-- SCREEN 1: 3D UNBOXING LANDING PAGE -->
+        <section id="screen-unboxing" class="min-h-[75vh] flex flex-col items-center justify-center text-center space-y-8">
+            <div class="space-y-3 max-w-2xl mx-auto">
+                <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full glass-card border border-rose-500/30 text-rose-300 text-xs font-bold uppercase tracking-widest animate-pulse">
+                    <i class="fa-solid fa-sparkles text-amber-300"></i>
+                    <span id="display-badge">Special Digital Gift</span>
+                </div>
+                <h1 id="display-title" class="text-3xl md:text-6xl font-black tracking-tight font-serif text-transparent bg-clip-text bg-gradient-to-r from-white via-rose-100 to-amber-200 leading-tight">
+                    Ada Hadiah Spesial Untuk <span id="display-recipient" class="underline decoration-rose-500/50 decoration-wavy">Kamu</span> ✨
+                </h1>
+                <p id="display-subtitle" class="text-gray-300 text-sm md:text-base max-w-lg mx-auto font-light leading-relaxed">
+                    Seseorang telah menyiapkan kejutan manis khusus untukmu. Sentuh kotaknya untuk membukanya!
+                </p>
             </div>
 
-            <!-- TAB 1: GAME LIBRARY -->
-            <div id="content-games" class="flex-1 overflow-y-auto p-4 space-y-3">
-                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Pilih Interaksi & Game</div>
-                
-                <select id="gameCategorySelect" onchange="filterGames(this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400">
-                    <option value="ALL">✨ Semua Kategori (60+ Game)</option>
-                    <option value="LOVE">💗 Love & Couple</option>
-                    <option value="GUESSING">🧠 Guessing</option>
-                    <option value="PUZZLE">🧩 Puzzle</option>
-                    <option value="QUICK">🎯 Quick & Fun</option>
-                    <option value="SURPRISE">🎁 Surprise & Reveal</option>
-                    <option value="RANDOM">🎲 Random</option>
-                    <option value="ARCADE">🕹️ Mini Arcade</option>
-                </select>
+            <!-- 3D Interactive Gift Box -->
+            <div class="box-container my-4 cursor-pointer group" onclick="unwrapGift()">
+                <div id="box-3d" class="gift-box-3d w-56 h-56 md:w-64 md:h-64 relative animate-float">
+                    <div class="absolute -inset-6 rounded-full bg-gradient-to-tr from-rose-500/40 via-purple-500/30 to-amber-400/40 blur-2xl group-hover:opacity-100 transition opacity-70 animate-glow"></div>
 
-                <div id="gameList" class="space-y-2"></div>
-            </div>
-
-            <!-- TAB 2: PHOTO TEMPLATE LIBRARY -->
-            <div id="content-photos" class="flex-1 overflow-y-auto p-4 space-y-3 hidden">
-                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Pilih Photo Experience</div>
-                
-                <select id="photoCategorySelect" onchange="filterPhotos(this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400">
-                    <option value="ALL">✨ Semua Display Foto (60 Template)</option>
-                    <option value="POLAROID">📷 Polaroid Collection</option>
-                    <option value="FILM">🎞️ Film & Camera</option>
-                    <option value="ROMANTIC">💌 Romantic</option>
-                    <option value="CUTE">🌸 Cute & Aesthetic</option>
-                    <option value="SCRAPBOOK">📔 Scrapbook Style</option>
-                    <option value="COLLAGE">🖼️ Collage</option>
-                    <option value="MEMORY">🧳 Memory & Story</option>
-                    <option value="EXPERIENCE">🎀 Interactive Experience</option>
-                </select>
-
-                <div id="photoList" class="space-y-2"></div>
-            </div>
-
-            <!-- TAB 3: AUDIO & MUSIC (LAGU) -->
-            <div id="content-audio" class="flex-1 overflow-y-auto p-4 space-y-4 hidden">
-                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Musik Latar (BGM Lagu)</div>
-                
-                <div class="p-3 bg-rose-50/50 border border-rose-100 rounded-xl space-y-3">
-                    <div>
-                        <label class="text-[11px] font-medium text-slate-600 block mb-1">1. Upload File Lagu Sendiri (.mp3 / .wav)</label>
-                        <input type="file" id="audioFileInput" accept="audio/*" onchange="handleAudioUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-500 file:text-white hover:file:bg-rose-600">
+                    <!-- Gift Box Lid -->
+                    <div class="gift-lid-3d absolute -top-5 -left-3 -right-3 h-16 rounded-t-2xl bg-gradient-to-r from-rose-600 via-rose-500 to-purple-700 shadow-2xl border-b-2 border-rose-400/40 flex items-center justify-center z-20">
+                        <div class="w-10 h-full bg-gradient-to-b from-amber-300 to-amber-500 absolute left-1/2 -translate-x-1/2 shadow-md"></div>
+                        <div class="absolute -top-7 left-1/2 -translate-x-1/2 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-gradient-to-tr from-amber-400 to-amber-200 rounded-full border-2 border-amber-100 shadow-xl flex items-center justify-center group-hover:scale-110 transition">
+                                <div class="w-5 h-5 bg-amber-600 rounded-full"></div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="relative flex py-1 items-center">
-                        <div class="flex-grow border-t border-rose-200"></div>
-                        <span class="flex-shrink mx-2 text-[10px] text-slate-400 font-bold uppercase">Atau URL Lagu</span>
-                        <div class="flex-grow border-t border-rose-200"></div>
-                    </div>
-
-                    <div>
-                        <label class="text-[11px] font-medium text-slate-600 block mb-1">2. Masukkan URL Audio</label>
-                        <input type="text" id="bgmUrl" placeholder="https://example.com/lagu.mp3" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-rose-400 bg-white">
-                        <button onclick="applyUrlAudio()" class="w-full mt-2 py-1.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-lg transition">Pasang Audio URL</button>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Preset Musik Suasana</label>
-                    <div class="space-y-1.5" id="presetMusicList"></div>
-                </div>
-            </div>
-
-            <!-- TAB 4: STYLE, FONTS & SYMBOLS -->
-            <div id="content-style" class="flex-1 overflow-y-auto p-4 space-y-5 hidden">
-                <!-- Font Customization -->
-                <div>
-                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Pilihan Font & Tipografi</label>
-                    <select id="globalFontSelect" onchange="setGlobalFont(this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400">
-                        <option value="font-jakarta">Plus Jakarta (Modern Minimalist)</option>
-                        <option value="font-handwriting">Caveat (Tulisan Tangan Casually)</option>
-                        <option value="font-romantic">Sacramento (Kaligrafi Romantis)</option>
-                        <option value="font-serif-custom">Playfair Display (Elegant Serif)</option>
-                        <option value="font-cartoon">Fredoka (Cute & Round Cartoon)</option>
-                        <option value="font-pixel">Press Start 2P (Retro Pixel Game)</option>
-                    </select>
-                </div>
-
-                <!-- Theme Colors -->
-                <div class="pt-3 border-t border-slate-100">
-                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Tema Warna Latar</label>
-                    <div class="grid grid-cols-2 gap-2" id="themeSelector"></div>
-                </div>
-
-                <!-- Symbol & Emoji Library -->
-                <div class="pt-3 border-t border-slate-100">
-                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Pustaka Simbol & Stiker (Klik untuk Salin)</label>
-                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 grid grid-cols-6 gap-2 text-center text-lg">
-                        <button onclick="copySymbol('❤️')" class="hover:scale-125 transition">❤️</button>
-                        <button onclick="copySymbol('💖')" class="hover:scale-125 transition">💖</button>
-                        <button onclick="copySymbol('✨')" class="hover:scale-125 transition">✨</button>
-                        <button onclick="copySymbol('🎀')" class="hover:scale-125 transition">🎀</button>
-                        <button onclick="copySymbol('⭐')" class="hover:scale-125 transition">⭐</button>
-                        <button onclick="copySymbol('🌸')" class="hover:scale-125 transition">🌸</button>
-                        <button onclick="copySymbol('🎁')" class="hover:scale-125 transition">🎁</button>
-                        <button onclick="copySymbol('💌')" class="hover:scale-125 transition">💌</button>
-                        <button onclick="copySymbol('🎮')" class="hover:scale-125 transition">🎮</button>
-                        <button onclick="copySymbol('👑')" class="hover:scale-125 transition">👑</button>
-                        <button onclick="copySymbol('🧸')" class="hover:scale-125 transition">🧸</button>
-                        <button onclick="copySymbol('🗝️')" class="hover:scale-125 transition">🗝️</button>
+                    <!-- Gift Box Main Body -->
+                    <div class="w-full h-full rounded-2xl bg-gradient-to-br from-rose-600 via-purple-800 to-indigo-950 p-1 shadow-2xl border border-white/20 relative overflow-hidden flex items-center justify-center">
+                        <div class="w-10 h-full bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 absolute left-1/2 -translate-x-1/2 shadow-inner"></div>
+                        <div class="relative z-10 glass-card px-4 py-2 rounded-full border border-white/30 text-white font-bold text-xs md:text-sm flex items-center space-x-2 shadow-2xl group-hover:scale-105 transition">
+                            <i class="fa-solid fa-hand-pointer text-amber-300 animate-bounce"></i>
+                            <span>Klik Untuk Buka Kado!</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </aside>
 
-        <!-- CANVAS WORKSPACE (JOURNEY FLOW BUILDER) -->
-        <main class="flex-1 bg-slate-50 relative overflow-y-auto p-8 flex flex-col items-center">
-            <canvas id="particleCanvas"></canvas>
+            <div class="text-xs text-gray-400 font-light italic flex items-center justify-center space-x-2">
+                <i class="fa-brands fa-youtube text-red-500"></i>
+                <span>Putar musik YouTube di kanan bawah untuk suasana terbaik!</span>
+            </div>
+        </section>
 
-            <div class="max-w-xl w-full space-y-4 mb-20 z-10">
-                <div class="flex items-center justify-between mb-2">
-                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Alur Perjalanan Hadiah (Journey Timeline)</h2>
-                    <span id="stepCount" class="text-xs bg-rose-100 text-rose-600 px-2.5 py-1 rounded-full font-semibold">0 Langkah</span>
+        <!-- SCREEN 2: MAIN GIFT CONTENT HUB -->
+        <section id="screen-hub" class="hidden space-y-8 animate-fadeIn">
+            
+            <div class="text-center space-y-2">
+                <span class="px-3.5 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase bg-rose-500/20 border border-rose-500/30 text-rose-300">
+                    🎉 Happy Special Day!
+                </span>
+                <h2 id="hub-title" class="text-3xl md:text-4xl font-extrabold font-serif text-white">
+                    Kejutan Spesial Untukmu
+                </h2>
+                <p id="hub-sender" class="text-xs md:text-sm text-gray-300 font-medium">
+                    Persembahan penuh kasih dari <span class="text-amber-300 font-bold" id="hub-sender-name">Seseorang</span>
+                </p>
+            </div>
+
+            <!-- Tab Navigation Grid -->
+            <div class="flex items-center justify-center gap-1.5 p-1.5 rounded-2xl glass-card max-w-3xl mx-auto overflow-x-auto">
+                <button onclick="switchTab('letters')" id="tab-btn-letters" class="tab-btn flex-1 min-w-[95px] py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-md">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                    <span>Surat Rahasia</span>
+                </button>
+                <button onclick="switchTab('games')" id="tab-btn-games" class="tab-btn flex-1 min-w-[95px] py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-gray-300 hover:text-white">
+                    <i class="fa-solid fa-gamepad"></i>
+                    <span>Mini Game Hub</span>
+                </button>
+                <button onclick="switchTab('memories')" id="tab-btn-memories" class="tab-btn flex-1 min-w-[95px] py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-gray-300 hover:text-white">
+                    <i class="fa-solid fa-images"></i>
+                    <span>Foto Polaroid</span>
+                </button>
+                <button onclick="switchTab('vouchers')" id="tab-btn-vouchers" class="tab-btn flex-1 min-w-[95px] py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-gray-300 hover:text-white">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>Kupon Hadiah</span>
+                </button>
+                <button onclick="switchTab('starjar')" id="tab-btn-starjar" class="tab-btn flex-1 min-w-[95px] py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-gray-300 hover:text-white">
+                    <i class="fa-solid fa-jar"></i>
+                    <span>Toples Bintang</span>
+                </button>
+            </div>
+
+            <!-- TAB 1: MULTIPLE CUSTOM WAX SEAL LETTERS -->
+            <div id="tab-content-letters" class="tab-content max-w-3xl mx-auto space-y-6">
+                <!-- Letter Tabs Switcher -->
+                <div id="letter-selector-bar" class="flex items-center justify-center gap-2 overflow-x-auto pb-2"></div>
+
+                <div class="relative">
+                    <div id="envelope-sealed" class="glass-card p-8 md:p-12 rounded-3xl text-center space-y-6 border border-rose-500/30 relative overflow-hidden transition duration-500">
+                        <div class="w-16 h-16 rounded-full bg-rose-500/20 mx-auto flex items-center justify-center text-rose-400 text-2xl">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-xl font-bold font-serif text-white" id="sealed-letter-title">Surat Bertutup Segel Lilin</h3>
+                            <p class="text-xs text-gray-400">Ketuk segel di bawah untuk memecahkan segel dan membaca pesan tulus ini.</p>
+                        </div>
+                        <div class="pt-4 flex justify-center">
+                            <button onclick="crackWaxSeal()" id="wax-seal-btn" class="w-20 h-20 rounded-full bg-gradient-to-tr from-red-700 via-rose-600 to-red-800 border-4 border-amber-400/80 shadow-2xl flex items-center justify-center text-amber-200 text-2xl cursor-pointer hover:scale-105 active:scale-95 transition transform relative group">
+                                <i class="fa-solid fa-stamp group-hover:rotate-12 transition"></i>
+                                <span class="absolute -bottom-7 whitespace-nowrap text-[10px] font-bold tracking-widest text-amber-300 uppercase">Pecahkan Segel</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="envelope-unfolded" class="hidden glass-card-light p-6 md:p-10 rounded-3xl text-gray-800 space-y-6 shadow-2xl relative overflow-hidden border border-white">
+                        <div class="flex justify-between items-center border-b border-rose-100 pb-3">
+                            <div class="flex items-center space-x-2 text-rose-600 font-bold text-xs uppercase tracking-wider">
+                                <i class="fa-solid fa-heart"></i>
+                                <span id="unfolded-letter-badge">Surat Tulus #1</span>
+                            </div>
+                            <span class="text-xs text-gray-400 font-handwriting text-base" id="letter-date">Spesial Hari Ini</span>
+                        </div>
+                        <div id="letter-typed-text" class="font-handwriting text-2xl md:text-3xl leading-relaxed text-gray-800 min-h-[160px]"></div>
+                        <div class="text-right border-t border-rose-100 pt-4">
+                            <p class="text-xs text-gray-400">Dengan kasih,</p>
+                            <p id="letter-sender-sign" class="font-script text-2xl md:text-3xl text-rose-600 font-bold">Sahabat Sejatimu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: MULTI-GAME HUB -->
+            <div id="tab-content-games" class="tab-content hidden max-w-3xl mx-auto space-y-6">
+                <!-- Mini Game Selection Tabs -->
+                <div class="flex justify-center space-x-2 p-1.5 rounded-xl bg-white/5 border border-white/10 max-w-md mx-auto">
+                    <button onclick="switchMiniGame('memory')" id="minigame-tab-memory" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-rose-500 text-white shadow-md transition">
+                        🧠 Memory Match
+                    </button>
+                    <button onclick="switchMiniGame('catcher')" id="minigame-tab-catcher" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition">
+                        ⭐ Tangkap Bintang
+                    </button>
+                    <button onclick="switchMiniGame('quiz')" id="minigame-tab-quiz" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition">
+                        ❓ Quiz Sahabat
+                    </button>
                 </div>
 
-                <!-- Interactive Steps List -->
-                <div id="journeyCanvas" class="space-y-4"></div>
+                <!-- GAME 1: MEMORY MATCH -->
+                <div id="game-view-memory" class="glass-card p-6 rounded-3xl border border-rose-500/30 text-center space-y-4">
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-amber-300">Mini Game #1</span>
+                        <h3 class="text-xl font-bold font-serif text-white">Memory Card Match 💖</h3>
+                        <p class="text-xs text-gray-300">Temukan pasangan emoji yang sama untuk memenangkan game!</p>
+                    </div>
+                    <div id="game-board" class="grid grid-cols-4 gap-3 max-w-md mx-auto aspect-square my-4"></div>
+                    <div id="game-status" class="text-xs font-bold text-rose-300">Langkah: 0 | Cocok: 0 / 4</div>
+                </div>
 
-                <!-- Empty State Indicator -->
-                <div id="emptyState" class="border-2 border-dashed border-rose-200 rounded-2xl p-8 text-center bg-white/60 backdrop-blur">
-                    <i data-lucide="plus-circle" class="w-10 h-10 text-rose-300 mx-auto mb-2"></i>
-                    <p class="text-sm font-medium text-slate-600">Belum ada langkah yang ditambahkan</p>
-                    <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto">Pilih game atau template foto dari menu sebelah kiri untuk membangun alur pengalaman interaktif.</p>
+                <!-- GAME 2: FALLING STARS / HEART CATCHER ARCADE -->
+                <div id="game-view-catcher" class="hidden glass-card p-6 rounded-3xl border border-rose-500/30 text-center space-y-4">
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-amber-300">Mini Game #2</span>
+                        <h3 class="text-xl font-bold font-serif text-white">Catch The Falling Stars ⭐</h3>
+                        <p class="text-xs text-gray-300">Geser keranjang dengan mouse/sentuhan untuk menangkap bintang dalam 30 detik!</p>
+                    </div>
+
+                    <div class="flex items-center justify-between max-w-md mx-auto text-xs font-bold text-amber-300 px-2">
+                        <span>Skor: <span id="catcher-score">0</span></span>
+                        <span>Waktu: <span id="catcher-timer">30</span>s</span>
+                    </div>
+
+                    <div id="catcher-canvas-container" class="relative w-full max-w-md mx-auto h-64 bg-black/40 rounded-2xl overflow-hidden border border-white/10 touch-none">
+                        <canvas id="catcher-canvas" class="w-full h-full block"></canvas>
+                        <div id="catcher-start-overlay" class="absolute inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center p-4 space-y-3">
+                            <i class="fa-solid fa-basket-shopping text-4xl text-amber-400"></i>
+                            <button onclick="startCatcherGame()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-bold text-xs shadow-lg hover:scale-105 transition">
+                                Mulai Game Tangkap Bintang!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 3: FRIENDSHIP TRIVIA QUIZ -->
+                <div id="game-view-quiz" class="hidden glass-card p-6 rounded-3xl border border-rose-500/30 text-center space-y-4">
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-amber-300">Mini Game #3</span>
+                        <h3 class="text-xl font-bold font-serif text-white">Quiz Chemistry & Persahabatan ❓</h3>
+                        <p class="text-xs text-gray-300">Jawab pertanyaan-pertanyaan seru ini untuk menguji persahabatan kita!</p>
+                    </div>
+
+                    <div id="quiz-container" class="max-w-md mx-auto text-left space-y-4 bg-white/5 p-5 rounded-2xl border border-white/10">
+                        <div class="flex justify-between text-[11px] font-bold text-rose-300">
+                            <span id="quiz-progress">Pertanyaan 1 dari 3</span>
+                            <span id="quiz-score-display">Skor: 0</span>
+                        </div>
+                        <h4 id="quiz-question-text" class="text-base font-bold text-white font-serif"></h4>
+                        <div id="quiz-options-list" class="space-y-2"></div>
+                    </div>
                 </div>
             </div>
-        </main>
 
-        <!-- RIGHT SIDEBAR: STEP PROPERTY & PHOTO/DOCUMENT UPLOADER -->
-        <aside id="editorSidebar" class="w-80 border-l border-rose-100 bg-white p-5 flex flex-col z-10 shrink-0">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-                <h3 class="font-bold text-sm text-slate-800">Detail & Setting Langkah</h3>
-                <i data-lucide="sliders" class="w-4 h-4 text-slate-400"></i>
+            <!-- TAB 3: POLAROID MEMORIES PHOTO GALLERY -->
+            <div id="tab-content-memories" class="tab-content hidden max-w-3xl mx-auto space-y-6">
+                <div class="text-center space-y-1">
+                    <h3 class="text-xl font-bold font-serif text-white">Galeri Kenangan Polaroid 📸</h3>
+                    <p class="text-xs text-gray-400">Klik foto mana saja untuk melihat kenangan indah ini secara penuh!</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-2" id="polaroid-grid"></div>
             </div>
 
-            <div id="editorForm" class="flex-1 overflow-y-auto space-y-4">
-                <p class="text-xs text-slate-400 italic text-center py-10">Pilih salah satu langkah di kanvas tengah untuk mengedit teks, upload foto dari galeri HP/dokumen, atau kunci jawaban.</p>
+            <!-- TAB 4: VOUCHERS TAB -->
+            <div id="tab-content-vouchers" class="tab-content hidden max-w-3xl mx-auto space-y-6">
+                <div class="text-center space-y-1">
+                    <h3 class="text-xl font-bold font-serif text-white">Kupon Hadiah Interaktif 🎟️</h3>
+                    <p class="text-xs text-gray-400">Klik tombol di bawah kupon untuk mengklaim kado spesialmu!</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="vouchers-grid"></div>
             </div>
-        </aside>
 
+            <!-- TAB 5: WISHING STAR JAR -->
+            <div id="tab-content-starjar" class="tab-content hidden max-w-2xl mx-auto space-y-6">
+                <div class="text-center space-y-1">
+                    <h3 class="text-xl font-bold font-serif text-white">Toples Bintang Harapan 🫙✨</h3>
+                    <p class="text-xs text-gray-400">Sentuh setiap bintang bercahaya di dalam toples untuk membaca pesan/pujian rahasia!</p>
+                </div>
+                <div class="glass-card p-6 rounded-3xl border border-amber-500/30 text-center relative overflow-hidden min-h-[320px] flex flex-col items-center justify-between">
+                    <div id="star-jar-container" class="w-full flex-1 flex flex-wrap items-center justify-center gap-4 p-4"></div>
+                    <div id="star-message-box" class="w-full bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 min-h-[70px] flex items-center justify-center text-amber-200 text-sm md:text-base font-medium italic transition">
+                        ✨ Klik salah satu bintang di atas!
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FLOATING YOUTUBE MUSIC PLAYER WIDGET -->
+    <div id="youtube-player-widget" class="fixed bottom-4 right-4 z-40 glass-card p-3 rounded-2xl border border-white/20 shadow-2xl flex items-center space-x-3 backdrop-blur-2xl">
+        <div class="relative w-11 h-11 flex items-center justify-center">
+            <div id="vinyl-disc" class="w-11 h-11 rounded-full bg-gradient-to-tr from-gray-900 via-gray-800 to-black border-2 border-rose-500/50 flex items-center justify-center shadow-md">
+                <div class="w-4 h-4 rounded-full bg-amber-400 border border-white/40 flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 rounded-full bg-black"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hidden sm:block space-y-0.5 max-w-[130px]">
+            <p class="text-[11px] font-bold text-white truncate" id="yt-track-title">YouTube BGM Music</p>
+            <p class="text-[9px] text-rose-300 font-semibold" id="yt-status-text">Audio Ready</p>
+        </div>
+
+        <div class="flex items-center space-x-1">
+            <button onclick="toggleYouTubePlay()" id="yt-play-btn" class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-500 to-purple-600 text-white flex items-center justify-center text-xs shadow-md hover:scale-105 transition">
+                <i class="fa-solid fa-play" id="yt-play-icon"></i>
+            </button>
+            <button onclick="openCustomizerModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-gray-300 flex items-center justify-center text-xs transition" title="Ganti Musik YouTube">
+                <i class="fa-brands fa-youtube text-red-500"></i>
+            </button>
+        </div>
+
+        <!-- Hidden Responsive iframe YouTube Player Container -->
+        <div id="yt-iframe-container" class="hidden">
+            <iframe id="yt-player-iframe" src="" allow="autoplay"></iframe>
+        </div>
     </div>
 
-    <!-- AUDIO ELEMENT -->
-    <audio id="globalBgmAudio" loop></audio>
+    <!-- LIGHTBOX PHOTO MODAL -->
+    <div id="modal-lightbox" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4" onclick="closeLightbox()">
+        <div class="relative max-w-2xl w-full bg-white p-4 rounded-2xl shadow-2xl space-y-3" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" class="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-lg hover:bg-rose-600 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="lightbox-img" src="" class="w-full h-auto max-h-[70vh] object-contain rounded-xl">
+            <div class="text-center space-y-1 pt-2">
+                <h4 id="lightbox-caption" class="font-handwriting text-2xl text-gray-800 font-bold"></h4>
+                <p id="lightbox-date" class="text-xs text-gray-400 uppercase font-semibold tracking-wider"></p>
+            </div>
+        </div>
+    </div>
 
-    <!-- JAVASCRIPT APP ENGINE -->
-    <script>
-        /* ==========================================================================
-           1. DATA LIBRARIES: 60 GAMES & 60 PHOTO EXPERIENCES
-           ========================================================================== */
+    <!-- CUSTOMIZER STUDIO MODAL -->
+    <div id="modal-customizer" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="relative w-full max-w-2xl bg-[#161228] border border-white/15 rounded-3xl shadow-2xl p-6 md:p-8 space-y-6 my-8 text-white">
+            
+            <button onclick="closeCustomizerModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
-        const GAME_LIBRARY = [
-            // LOVE & COUPLE
-            { id: 'g_hwdykm', cat: 'LOVE', name: 'How Well Do You Know Me?', desc: 'Pertanyaan seputar creator dengan skor.' },
-            { id: 'g_thisthat', cat: 'LOVE', name: 'This or That', desc: 'Pilihan 2 opsi cepat (Kopi vs Cokelat, dll).' },
-            { id: 'g_guesstext', cat: 'LOVE', name: 'Guess My Answer', desc: 'Tebak jawaban yang dipilih oleh creator.' },
-            { id: 'g_completesentence', cat: 'LOVE', name: 'Complete My Sentence', desc: 'Lengkapi kalimat romantis yang terpotong.' },
-            { id: 'g_memoryquiz', cat: 'LOVE', name: 'Our Memory Quiz', desc: 'Kuis seputar kenangan spesial kalian.' },
-            { id: 'g_lovepersonality', cat: 'LOVE', name: 'Love Personality Quiz', desc: 'Kuis kepribadian cinta dengan hasil manis.' },
-            { id: 'g_pickheart', cat: 'LOVE', name: 'Pick a Heart', desc: 'Pilih hati yang menyimpan pesan rahasia.' },
-            { id: 'g_choosedate', cat: 'LOVE', name: 'Choose Our Next Date', desc: 'Pilih kencan impian berikutnya.' },
-            { id: 'g_whosaidit', cat: 'LOVE', name: 'Who Said It?', desc: 'Tebak kutipan dari siapa (Creator / Recipient).' },
-            { id: 'g_guessmemory', cat: 'LOVE', name: 'Guess the Memory', desc: 'Tebak kenangan indah berdasarkan petunjuk.' },
-
-            // GUESSING
-            { id: 'g_emojiguess', cat: 'GUESSING', name: 'Emoji Guess', desc: 'Tebak kata/judul film dari susunan emoji.' },
-            { id: 'g_photoguess', cat: 'GUESSING', name: 'Photo Guess', desc: 'Tebak foto rahasia yang diburamkan/blur.' },
-            { id: 'g_wordguess', cat: 'GUESSING', name: 'Guess the Word', desc: 'Tebak kata rahasia dari petunjuk.' },
-            { id: 'g_numberguess', cat: 'GUESSING', name: 'Guess the Number', desc: 'Tebak angka keberuntungan.' },
-            { id: 'g_songguess', cat: 'GUESSING', name: 'Guess the Song', desc: 'Tebak judul lagu kenangan kalian.' },
-            { id: 'g_placeguess', cat: 'GUESSING', name: 'Guess the Place', desc: 'Tebak lokasi kencan pertama.' },
-
-            // PUZZLE
-            { id: 'g_jigsaw', cat: 'PUZZLE', name: 'Photo Jigsaw Puzzle', desc: 'Susun potongan puzzle foto (6, 12, 20, 30 pcs).' },
-            { id: 'g_sliding', cat: 'PUZZLE', name: 'Sliding Photo Puzzle', desc: 'Puzzle geser foto klasik.' },
-            { id: 'g_memorymatch', cat: 'PUZZLE', name: 'Memory Match', desc: 'Cari pasangan kartu foto yang sama.' },
-            { id: 'g_finddiff', cat: 'PUZZLE', name: 'Find the Difference', desc: 'Temukan perbedaan di dua foto.' },
-            { id: 'g_hiddenheart', cat: 'PUZZLE', name: 'Find the Hidden Heart', desc: 'Cari ikon hati tersembunyi di dalam gambar.' },
-            { id: 'g_wordscramble', cat: 'PUZZLE', name: 'Word Scramble', desc: 'Susun huruf acak menjadi kata cinta.' },
-
-            // QUICK & FUN
-            { id: 'g_tapheart', cat: 'QUICK', name: 'Tap the Heart', desc: 'Tap hati sebanyak-banyaknya dalam batas waktu.' },
-            { id: 'g_collector', cat: 'QUICK', name: 'Heart Collector', desc: 'Tangkap hati yang jatuh dari atas.' },
-            { id: 'g_balloonpop', cat: 'QUICK', name: 'Balloon Pop', desc: 'Pecahkan balon untuk membuka pesan.' },
-            { id: 'g_spinwheel', cat: 'QUICK', name: 'Spin the Wheel', desc: 'Putar roda keberuntungan hadiah.' },
-
-            // SURPRISE & REVEAL
-            { id: 'g_scratch', cat: 'SURPRISE', name: 'Scratch Card', desc: 'Gosok kartu untuk melihat pesan tersembunyi.' },
-            { id: 'g_giftbox', cat: 'SURPRISE', name: 'Choose a Gift Box', desc: 'Pilih salah satu kotak kado penuh kejutan.' },
-            { id: 'g_door', cat: 'SURPRISE', name: 'Choose a Door', desc: 'Buka pintu rahasia.' },
-            { id: 'g_envelope', cat: 'SURPRISE', name: 'Secret Envelope', desc: 'Buka surat dari dalam amplop manis.' },
-            { id: 'g_password', cat: 'SURPRISE', name: 'Password Gift', desc: 'Masukkan kata kunci khusus untuk lanjut.' },
-
-            // RANDOM & ARCADE
-            { id: 'g_rand_q', cat: 'RANDOM', name: 'Random Question', desc: 'Pertanyaan acak manis.' },
-            { id: 'g_tictactoe', cat: 'ARCADE', name: 'Tic Tac Toe Love', desc: 'Bermain Tic Tac Toe XO bersama.' }
-        ];
-
-        const PHOTO_LIBRARY = [
-            // POLAROID
-            { id: 'p_single_polaroid', cat: 'POLAROID', name: 'Single Polaroid', desc: '1 foto besar dengan frame Polaroid klasik.' },
-            { id: 'p_double_polaroid', cat: 'POLAROID', name: 'Double Polaroid', desc: '2 foto bertumpuk miring aesthetic.' },
-            { id: 'p_triple_polaroid', cat: 'POLAROID', name: 'Triple Polaroid', desc: '3 foto kenangan sejajar.' },
-            { id: 'p_polaroid_wall', cat: 'POLAROID', name: 'Polaroid Wall', desc: 'Dinding foto Polaroid aesthetic.' },
-
-            // FILM & CAMERA
-            { id: 'p_film_strip', cat: 'FILM', name: 'Film Strip', desc: 'Foto vertikal menyerupai klise film negatif.' },
-            { id: 'p_photobooth', cat: 'FILM', name: 'Photo Booth 4-Cut', desc: '4 foto vertikal bergaya photo booth.' },
-
-            // ROMANTIC
-            { id: 'p_heart_collage', cat: 'ROMANTIC', name: 'Heart Collage', desc: 'Kumpulan foto membentuk pola hati.' },
-            { id: 'p_envelope_photos', cat: 'ROMANTIC', name: 'Envelope Photos', desc: 'Foto-foto yang keluar dari amplop.' },
-
-            // CUTE & SCRAPBOOK
-            { id: 'p_floral_frame', cat: 'CUTE', name: 'Floral Frame', desc: 'Foto dengan bingkai bunga-bunga manis.' },
-            { id: 'p_washi_tape', cat: 'SCRAPBOOK', name: 'Washi Tape Frame', desc: 'Foto ditempel masking tape aesthetic.' },
-
-            // INTERACTIVE EXPERIENCE
-            { id: 'p_flip_cards', cat: 'EXPERIENCE', name: 'Flip Photos', desc: 'Klik foto untuk membalik dan membaca pesan.' },
-            { id: 'p_hanging_photos', cat: 'EXPERIENCE', name: 'Hanging Photos', desc: 'Foto-foto digantung di tali kenangan.' }
-        ];
-
-        const PRESET_MUSIC = [
-            { title: 'Romantic Piano & Strings', url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3' },
-            { title: 'Acoustic Guitar Love', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73117.mp3' },
-            { title: 'Sweet Lofi Memory', url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3' }
-        ];
-
-        /* ==========================================================================
-           2. APP STATE
-           ========================================================================== */
-
-        let journeySteps = [];
-        let selectedStepId = null;
-        let isPreviewMode = false;
-        let activeTheme = 'rose';
-        let activeFontClass = 'font-jakarta';
-        let currentAudioUrl = '';
-
-        /* ==========================================================================
-           3. INITIALIZATION
-           ========================================================================== */
-
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            renderGameList('ALL');
-            renderPhotoList('ALL');
-            renderThemeSelector();
-            renderPresetMusic();
-            initParticleCanvas();
-        });
-
-        function switchTab(tabName) {
-            ['games', 'photos', 'audio', 'style'].forEach(t => {
-                const btn = document.getElementById(`tab-${t}`);
-                const content = document.getElementById(`content-${t}`);
-                if (t === tabName) {
-                    btn.classList.add('bg-white', 'text-rose-600', 'shadow-sm');
-                    btn.classList.remove('text-slate-500');
-                    content.classList.remove('hidden');
-                } else {
-                    btn.classList.remove('bg-white', 'text-rose-600', 'shadow-sm');
-                    btn.classList.add('text-slate-500');
-                    content.classList.add('hidden');
-                }
-            });
-        }
-
-        /* ==========================================================================
-           4. LIST RENDERING & FILTERS
-           ========================================================================== */
-
-        function renderGameList(category) {
-            const container = document.getElementById('gameList');
-            container.innerHTML = '';
-            const filtered = category === 'ALL' ? GAME_LIBRARY : GAME_LIBRARY.filter(g => g.cat === category);
-
-            filtered.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'p-3 border border-slate-100 bg-slate-50/80 hover:bg-rose-50/60 hover:border-rose-200 rounded-xl cursor-pointer transition flex justify-between items-center group';
-                card.onclick = () => addStep('GAME', game);
-                card.innerHTML = `
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-700 group-hover:text-rose-600">${game.name}</h4>
-                        <p class="text-[10px] text-slate-400 line-clamp-1">${game.desc}</p>
-                    </div>
-                    <i data-lucide="plus" class="w-4 h-4 text-slate-300 group-hover:text-rose-500"></i>
-                `;
-                container.appendChild(card);
-            });
-            lucide.createIcons();
-        }
-
-        function renderPhotoList(category) {
-            const container = document.getElementById('photoList');
-            container.innerHTML = '';
-            const filtered = category === 'ALL' ? PHOTO_LIBRARY : PHOTO_LIBRARY.filter(p => p.cat === category);
-
-            filtered.forEach(photo => {
-                const card = document.createElement('div');
-                card.className = 'p-3 border border-slate-100 bg-slate-50/80 hover:bg-rose-50/60 hover:border-rose-200 rounded-xl cursor-pointer transition flex justify-between items-center group';
-                card.onclick = () => addStep('PHOTO', photo);
-                card.innerHTML = `
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-700 group-hover:text-rose-600">${photo.name}</h4>
-                        <p class="text-[10px] text-slate-400 line-clamp-1">${photo.desc}</p>
-                    </div>
-                    <i data-lucide="plus" class="w-4 h-4 text-slate-300 group-hover:text-rose-500"></i>
-                `;
-                container.appendChild(card);
-            });
-            lucide.createIcons();
-        }
-
-        function filterGames(cat) { renderGameList(cat); }
-        function filterPhotos(cat) { renderPhotoList(cat); }
-
-        /* ==========================================================================
-           5. STEP MANAGEMENT & CANVAS
-           ========================================================================== */
-
-        function addStep(type, item) {
-            const stepId = 'step_' + Date.now();
-            const newStep = {
-                id: stepId,
-                type: type,
-                itemRef: item,
-                title: item.name,
-                message: 'Tuliskan pesan manis atau petunjuk khusus untuk si dia...',
-                imageUrl: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80',
-                puzzlePieces: 12,
-                secretAnswer: 'cinta'
-            };
-
-            journeySteps.push(newStep);
-            renderCanvas();
-            selectStep(stepId);
-        }
-
-        function removeStep(stepId, event) {
-            event.stopPropagation();
-            journeySteps = journeySteps.filter(s => s.id !== stepId);
-            if (selectedStepId === stepId) selectedStepId = null;
-            renderCanvas();
-            renderEditor();
-        }
-
-        function moveStep(index, direction, event) {
-            event.stopPropagation();
-            if (direction === 'UP' && index > 0) {
-                const temp = journeySteps[index];
-                journeySteps[index] = journeySteps[index - 1];
-                journeySteps[index - 1] = temp;
-            } else if (direction === 'DOWN' && index < journeySteps.length - 1) {
-                const temp = journeySteps[index];
-                journeySteps[index] = journeySteps[index + 1];
-                journeySteps[index + 1] = temp;
-            }
-            renderCanvas();
-        }
-
-        function renderCanvas() {
-            const container = document.getElementById('journeyCanvas');
-            const emptyState = document.getElementById('emptyState');
-            document.getElementById('stepCount').innerText = `${journeySteps.length} Langkah`;
-
-            if (journeySteps.length === 0) {
-                container.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            container.innerHTML = '';
-
-            journeySteps.forEach((step, idx) => {
-                const isSelected = step.id === selectedStepId;
-                const stepCard = document.createElement('div');
-                stepCard.className = `p-4 rounded-2xl bg-white border-2 transition cursor-pointer relative shadow-sm ${activeFontClass} ${
-                    isSelected ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-100 hover:border-rose-200'
-                }`;
-                stepCard.onclick = () => selectStep(step.id);
-
-                const icon = step.type === 'GAME' ? 'gamepad-2' : 'image';
-                const badgeColor = step.type === 'GAME' ? 'bg-amber-100 text-amber-700' : 'bg-pink-100 text-pink-700';
-
-                stepCard.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <span class="w-7 h-7 rounded-full bg-rose-50 text-rose-600 font-bold text-xs flex items-center justify-center">${idx + 1}</span>
-                            <div class="p-2 rounded-xl ${badgeColor}">
-                                <i data-lucide="${icon}" class="w-4 h-4"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-800">${step.title}</h4>
-                                <span class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">${step.type} • ${step.itemRef.cat}</span>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-1">
-                            <button onclick="moveStep(${idx}, 'UP', event)" class="p-1 text-slate-300 hover:text-slate-600"><i data-lucide="chevron-up" class="w-4 h-4"></i></button>
-                            <button onclick="moveStep(${idx}, 'DOWN', event)" class="p-1 text-slate-300 hover:text-slate-600"><i data-lucide="chevron-down" class="w-4 h-4"></i></button>
-                            <button onclick="removeStep('${step.id}', event)" class="p-1 text-slate-300 hover:text-rose-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(stepCard);
-            });
-
-            lucide.createIcons();
-        }
-
-        function selectStep(stepId) {
-            selectedStepId = stepId;
-            renderCanvas();
-            renderEditor();
-        }
-
-        /* ==========================================================================
-           6. RIGHT SIDEBAR EDITOR & LOCAL PHOTO UPLOAD (DOKUMEN)
-           ========================================================================== */
-
-        function renderEditor() {
-            const container = document.getElementById('editorForm');
-            const step = journeySteps.find(s => s.id === selectedStepId);
-
-            if (!step) {
-                container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-10">Pilih salah satu langkah di kanvas tengah untuk mengedit teks, upload foto dari HP/komputer, atau kuis.</p>`;
-                return;
-            }
-
-            container.innerHTML = `
-                <div class="space-y-4 ${activeFontClass}">
-                    <div>
-                        <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Judul Langkah</label>
-                        <input type="text" value="${step.title}" oninput="updateStepProp('title', this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none">
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Pesan / Petunjuk</label>
-                        <textarea oninput="updateStepProp('message', this.value)" rows="3" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none">${step.message}</textarea>
-                    </div>
-
-                    <!-- PHOTO / DOCUMENT UPLOAD SECTION -->
-                    <div class="p-3 bg-rose-50/50 border border-rose-100 rounded-xl space-y-2">
-                        <label class="text-[10px] font-bold uppercase text-rose-600 block">📁 Upload Foto dari Dokumen / HP</label>
-                        <input type="file" accept="image/*" onchange="handleImageUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-500 file:text-white hover:file:bg-rose-600">
-                        <p class="text-[10px] text-slate-400">Atau tempel URL foto online:</p>
-                        <input type="text" value="${step.imageUrl}" oninput="updateStepProp('imageUrl', this.value)" placeholder="https://..." class="w-full p-2 text-xs bg-white border border-slate-200 rounded-lg outline-none">
-                        ${step.imageUrl ? `<img src="${step.imageUrl}" class="w-full h-28 object-cover rounded-lg border mt-2">` : ''}
-                    </div>
-
-                    ${step.itemRef.id === 'g_jigsaw' ? `
-                    <div>
-                        <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Jumlah Pieces Puzzle</label>
-                        <select onchange="updateStepProp('puzzlePieces', this.value)" class="w-full p-2.5 text-xs bg-slate-50 border rounded-xl outline-none">
-                            <option value="6" ${step.puzzlePieces == 6 ? 'selected' : ''}>6 Pieces</option>
-                            <option value="12" ${step.puzzlePieces == 12 ? 'selected' : ''}>12 Pieces</option>
-                            <option value="20" ${step.puzzlePieces == 20 ? 'selected' : ''}>20 Pieces</option>
-                            <option value="30" ${step.puzzlePieces == 30 ? 'selected' : ''}>30 Pieces</option>
-                        </select>
-                    </div>
-                    ` : ''}
-
-                    ${step.type === 'GAME' ? `
-                    <div>
-                        <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Kunci Jawaban / Secret Code</label>
-                        <input type="text" value="${step.secretAnswer}" oninput="updateStepProp('secretAnswer', this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none">
-                    </div>
-                    ` : ''}
+            <div class="space-y-1 border-b border-white/10 pb-4">
+                <div class="flex items-center space-x-2 text-rose-400 font-bold text-xs uppercase tracking-wider">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Customizer Creator Studio</span>
                 </div>
-            `;
+                <h3 class="text-2xl font-bold font-serif">Kustomisasi & Buat Link Kado Unik</h3>
+                <p class="text-xs text-gray-400">Atur pesan, surat rahasia, link musik YouTube, foto, dan kupon lalu dapatkan link untuk dibagikan!</p>
+            </div>
+
+            <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Nama Penerima Kado</label>
+                        <input type="text" id="cust-recipient" value="Sahabatku" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-rose-500 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Nama Pengirim Kado</label>
+                        <input type="text" id="cust-sender" value="Teman Baikmu" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-rose-500 text-white">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Link Musik YouTube (Video / Shorts URL)</label>
+                    <input type="text" id="cust-yturl" value="https://www.youtube.com/watch?v=jfKfPfyJRdk" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500 text-white" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+
+                <!-- Multiple Letters Customization -->
+                <div class="space-y-2 border-t border-white/10 pt-3">
+                    <label class="block text-xs font-bold text-rose-300 uppercase tracking-wider">Surat Rahasia #1 & #2</label>
+                    <input type="text" id="cust-letter1-title" value="Pesan Tulus Ulang Tahun 💖" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs font-bold text-white" placeholder="Judul Surat 1">
+                    <textarea id="cust-letter1-body" rows="2" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white" placeholder="Isi Surat 1">Selamat ulang tahun ya! Terima kasih sudah menjadi tempat cerita paling hangat selama ini.</textarea>
+                    
+                    <input type="text" id="cust-letter2-title" value="Catatan Impian & Doa ✨" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs font-bold text-white" placeholder="Judul Surat 2">
+                    <textarea id="cust-letter2-body" rows="2" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white" placeholder="Isi Surat 2">Semoga semua harapan besarmu tahun ini satu per satu dapat terwujud dengan penuh kebahagiaan!</textarea>
+                </div>
+
+                <!-- Custom Photo URLs Input -->
+                <div class="space-y-2 border-t border-white/10 pt-3">
+                    <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider">URL Foto Kenangan (2 URL)</label>
+                    <input type="text" id="cust-photo1" value="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white">
+                    <input type="text" id="cust-photo2" value="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=600&q=80" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white">
+                </div>
+
+                <!-- Custom Vouchers Input -->
+                <div class="space-y-2 border-t border-white/10 pt-3">
+                    <label class="block text-xs font-bold text-purple-300 uppercase tracking-wider">Kupon Hadiah (2 Kupon)</label>
+                    <input type="text" id="cust-voucher1" value="☕ Traktir Kopi & Ngobrol Santai" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white">
+                    <input type="text" id="cust-voucher2" value="🎬 Tiket Nonton Bioskop Pilihanmu" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white">
+                </div>
+
+            </div>
+
+            <div class="pt-2 flex flex-col sm:flex-row gap-3">
+                <button onclick="generateCustomGiftLink()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-rose-500 via-purple-600 to-amber-500 text-white font-bold text-sm shadow-lg shadow-rose-500/20 hover:opacity-95 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-link"></i>
+                    <span>Buat & Salin Link Kado Unik</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /* APPLICATION CONFIGURATION STATE */
+        let giftConfig = {
+            theme: "default",
+            badge: "SPECIAL DIGITAL GIFT",
+            recipient: "Kamu",
+            sender: "Teman Baikmu",
+            youtubeUrl: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
+            letters: [
+                {
+                    title: "Pesan Tulus Ulang Tahun 💖",
+                    body: "Selamat ulang tahun ya! Terima kasih sudah menjadi tempat cerita paling hangat dan sahabat paling setia selama ini. Semoga harimu penuh tawa!",
+                    date: "Hari Spesial"
+                },
+                {
+                    title: "Catatan Doa & Harapan ✨",
+                    body: "Semoga semua impian besarmu tahun ini dimudahkan dan satu per satu dapat terwujud dengan penuh kebahagiaan!",
+                    date: "Harapan Terbaik"
+                }
+            ],
+            photos: [
+                { url: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80", caption: "Momen Indah ✨", date: "Kenangan" },
+                { url: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=600&q=80", caption: "Tertawa Bersama 🎉", date: "Tak Terlupakan" }
+            ],
+            vouchers: [
+                { title: "☕ Traktir Kopi & Ngobrol Santai", desc: "Berlaku kapan saja saat kita ketemu!" },
+                { title: "🎬 Tiket Nonton Bioskop Pilihanmu", desc: "Kamu yang pilih filmnya, aku yang bayar!" }
+            ],
+            stars: [
+                "Kamu adalah orang yang sangat baik hati! 💛",
+                "Terima kasih selalu membawa keceriaan! ✨",
+                "Semoga semua impian besarmu tercapai! 🚀",
+                "Dunia jadi lebih indah karena ada kamu! 🌸",
+                "Tetap jadi dirimu yang luar biasa ya! 🌟"
+            ]
+        };
+
+        let currentLetterIdx = 0;
+        let audioCtx = null;
+        let isYtPlaying = false;
+
+        /* WEB AUDIO SYNTHESIZER */
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
-        function updateStepProp(prop, value) {
-            const step = journeySteps.find(s => s.id === selectedStepId);
-            if (step) {
-                step[prop] = value;
-                renderCanvas();
-            }
-        }
+        function playSfx(type) {
+            initAudio();
+            if (!audioCtx) return;
 
-        // Handle Upload Foto Lokal (Base64)
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    updateStepProp('imageUrl', e.target.result);
-                    renderEditor();
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        /* ==========================================================================
-           7. AUDIO PLAYER & BGM SYSTEM
-           ========================================================================== */
-
-        function handleAudioUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const audioUrl = URL.createObjectURL(file);
-                setAudioBgm(audioUrl, file.name);
-            }
-        }
-
-        function applyUrlAudio() {
-            const url = document.getElementById('bgmUrl').value.trim();
-            if (url) {
-                setAudioBgm(url, 'Custom Audio URL');
-            }
-        }
-
-        function renderPresetMusic() {
-            const container = document.getElementById('presetMusicList');
-            container.innerHTML = '';
-            PRESET_MUSIC.forEach(m => {
-                const btn = document.createElement('button');
-                btn.className = 'w-full p-2 bg-slate-50 hover:bg-rose-50 text-left border border-slate-200 rounded-xl text-xs flex items-center justify-between text-slate-700 transition';
-                btn.onclick = () => setAudioBgm(m.url, m.title);
-                btn.innerHTML = `
-                    <span class="font-medium">${m.title}</span>
-                    <i data-lucide="play-circle" class="w-4 h-4 text-rose-500"></i>
-                `;
-                container.appendChild(btn);
-            });
-            lucide.createIcons();
-        }
-
-        function setAudioBgm(url, title) {
-            const audio = document.getElementById('globalBgmAudio');
-            audio.src = url;
-            audio.play();
-            currentAudioUrl = url;
-
-            const widget = document.getElementById('audioPlayerWidget');
-            document.getElementById('playingSongTitle').innerText = title;
-            widget.classList.remove('hidden');
-        }
-
-        function toggleAudioPlay() {
-            const audio = document.getElementById('globalBgmAudio');
-            const icon = document.getElementById('playIcon');
-
-            if (audio.paused) {
-                audio.play();
-                icon.setAttribute('data-lucide', 'pause');
-            } else {
-                audio.pause();
-                icon.setAttribute('data-lucide', 'play');
-            }
-            lucide.createIcons();
-        }
-
-        /* ==========================================================================
-           8. STYLES, FONTS, SIMBOLS & PARTICLES
-           ========================================================================== */
-
-        function setGlobalFont(fontClass) {
-            activeFontClass = fontClass;
-            renderCanvas();
-            renderEditor();
-        }
-
-        function renderThemeSelector() {
-            const themes = [
-                { id: 'rose', name: 'Romantic Rose', color: 'bg-rose-500' },
-                { id: 'midnight', name: 'Starry Night', color: 'bg-slate-900' },
-                { id: 'matcha', name: 'Matcha Garden', color: 'bg-emerald-600' },
-                { id: 'sunset', name: 'Warm Sunset', color: 'bg-amber-500' }
-            ];
-
-            const container = document.getElementById('themeSelector');
-            container.innerHTML = '';
-
-            themes.forEach(t => {
-                const btn = document.createElement('button');
-                btn.className = `p-2 border rounded-xl text-left flex items-center gap-2 transition ${activeTheme === t.id ? 'border-rose-500 bg-rose-50' : 'border-slate-100'}`;
-                btn.onclick = () => { activeTheme = t.id; renderThemeSelector(); };
-                btn.innerHTML = `
-                    <span class="w-3.5 h-3.5 rounded-full ${t.color}"></span>
-                    <span class="text-xs font-semibold text-slate-700">${t.name}</span>
-                `;
-                container.appendChild(btn);
-            });
-        }
-
-        function copySymbol(symbol) {
-            navigator.clipboard.writeText(symbol);
-            alert(`Simbol ${symbol} berhasil disalin! Anda dapat menempelkannya (paste) di judul atau pesan.`);
-        }
-
-        function initParticleCanvas() {
-            const canvas = document.getElementById('particleCanvas');
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-
-            function resize() {
-                canvas.width = canvas.parentElement.clientWidth;
-                canvas.height = canvas.parentElement.clientHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            for (let i = 0; i < 20; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    radius: Math.random() * 3 + 1,
-                    speedY: Math.random() * 0.4 + 0.1,
-                    opacity: Math.random() * 0.5 + 0.2
+            const now = audioCtx.currentTime;
+            if (type === 'pop') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.12);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.12);
+            } else if (type === 'fanfare') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0.15, now + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.3);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.3);
                 });
+            } else if (type === 'twinkle') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, now);
+                osc.frequency.exponentialRampToValueAtTime(1800, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.2);
             }
+        }
+
+        /* YOUTUBE EMBED PLAYER LOGIC */
+        function parseYouTubeVideoId(url) {
+            if (!url) return "jfKfPfyJRdk";
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : "jfKfPfyJRdk";
+        }
+
+        function toggleYouTubePlay() {
+            playSfx('pop');
+            const iframe = document.getElementById('yt-player-iframe');
+            const icon = document.getElementById('yt-play-icon');
+            const vinyl = document.getElementById('vinyl-disc');
+            const statusText = document.getElementById('yt-status-text');
+
+            const videoId = parseYouTubeVideoId(giftConfig.youtubeUrl);
+
+            if (!isYtPlaying) {
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1`;
+                isYtPlaying = true;
+                icon.className = "fa-solid fa-pause";
+                vinyl.classList.add('animate-spin-slow');
+                statusText.innerText = "Playing YouTube";
+            } else {
+                iframe.src = "";
+                isYtPlaying = false;
+                icon.className = "fa-solid fa-play";
+                vinyl.classList.remove('animate-spin-slow');
+                statusText.innerText = "Paused";
+            }
+        }
+
+        /* THEME CONTROLLER */
+        function toggleThemeDropdown() {
+            playSfx('pop');
+            document.getElementById('theme-dropdown').classList.toggle('hidden');
+        }
+
+        function selectTheme(themeName) {
+            playSfx('pop');
+            giftConfig.theme = themeName;
+            document.body.className = `min-h-screen font-sans relative overflow-x-hidden selection:bg-rose-500 selection:text-white pb-16 theme-${themeName}`;
+            document.getElementById('theme-dropdown').classList.add('hidden');
+        }
+
+        /* CANVAS BACKGROUND STARS */
+        function initStarsCanvas() {
+            const canvas = document.getElementById('stars-canvas');
+            const ctx = canvas.getContext('2d');
+            let width = (canvas.width = window.innerWidth);
+            let height = (canvas.height = window.innerHeight);
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const stars = Array.from({ length: 65 }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                size: Math.random() * 2,
+                alpha: Math.random(),
+                speed: Math.random() * 0.02 + 0.005
+            }));
 
             function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#fda4af';
-
-                particles.forEach(p => {
-                    ctx.globalAlpha = p.opacity;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    p.y -= p.speedY;
-                    if (p.y < 0) p.y = canvas.height;
+                ctx.clearRect(0, 0, width, height);
+                stars.forEach(s => {
+                    s.alpha += s.speed;
+                    if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+                    ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(s.alpha)})`;
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill();
                 });
-
                 requestAnimationFrame(animate);
             }
             animate();
         }
 
-        /* ==========================================================================
-           9. PREVIEW & EXPORT LINK
-           ========================================================================== */
+        /* APP LIFECYCLE & URL CONFIG */
+        window.onload = function() {
+            initStarsCanvas();
+            loadConfigFromUrl();
+            renderUIFromConfig();
+            initMemoryGame();
+            initCatcherCanvas();
+            initQuizGame();
+        };
 
-        function togglePreviewMode() {
-            isPreviewMode = !isPreviewMode;
-            document.getElementById('previewText').innerText = isPreviewMode ? 'Edit Journey' : 'Preview Journey';
-            alert(isPreviewMode ? 'Memasuki Mode Pratinjau Interaktif Journey' : 'Kembali ke Mode Editor');
+        function loadConfigFromUrl() {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                try {
+                    const decoded = JSON.parse(decodeURIComponent(escape(atob(hash))));
+                    if (decoded && decoded.recipient) {
+                        giftConfig = decoded;
+                    }
+                } catch(e) {
+                    console.log("Using default config.");
+                }
+            }
         }
 
-        function exportGiftLink() {
-            if (journeySteps.length === 0) {
-                alert('Silakan tambahkan setidaknya satu langkah game atau foto!');
+        function renderUIFromConfig() {
+            selectTheme(giftConfig.theme || "default");
+            document.getElementById('display-badge').innerText = giftConfig.badge || "SPECIAL DIGITAL GIFT";
+            document.getElementById('display-recipient').innerText = giftConfig.recipient || "Kamu";
+            document.getElementById('display-subtitle').innerText = `Seseorang (${giftConfig.sender}) telah menyiapkan kejutan manis khusus untukmu!`;
+            document.getElementById('hub-sender-name').innerText = giftConfig.sender || "Seseorang";
+            document.getElementById('letter-sender-sign').innerText = giftConfig.sender || "Sahabat Sejatimu";
+
+            renderLettersTab();
+            renderMemoriesTab();
+            renderVouchersTab();
+            renderStarJarTab();
+        }
+
+        function unwrapGift() {
+            playSfx('fanfare');
+            toggleYouTubePlay();
+            document.getElementById('box-3d').classList.add('opened');
+
+            confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } });
+
+            setTimeout(() => {
+                document.getElementById('screen-unboxing').classList.add('hidden');
+                document.getElementById('screen-hub').classList.remove('hidden');
+            }, 800);
+        }
+
+        function resetToLanding() {
+            playSfx('pop');
+            document.getElementById('box-3d').classList.remove('opened');
+            document.getElementById('screen-hub').classList.add('hidden');
+            document.getElementById('screen-unboxing').classList.remove('hidden');
+        }
+
+        function switchTab(tabName) {
+            playSfx('pop');
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn flex-1 min-w-[95px] py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-gray-300 hover:text-white";
+            });
+
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            activeBtn.className = "tab-btn flex-1 min-w-[95px] py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-md";
+
+            document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+        }
+
+        /* MULTIPLE LETTERS FEATURE */
+        function renderLettersTab() {
+            const bar = document.getElementById('letter-selector-bar');
+            bar.innerHTML = "";
+            const letters = giftConfig.letters || [];
+
+            letters.forEach((letData, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `px-4 py-2 rounded-xl text-xs font-bold transition border ${idx === currentLetterIdx ? 'bg-rose-500 text-white border-rose-400' : 'glass-card text-gray-300 border-white/10 hover:text-white'}`;
+                btn.innerText = `Surat #${idx + 1}`;
+                btn.onclick = () => {
+                    playSfx('pop');
+                    currentLetterIdx = idx;
+                    renderLettersTab();
+                    document.getElementById('envelope-sealed').classList.remove('hidden');
+                    document.getElementById('envelope-unfolded').classList.add('hidden');
+                };
+                bar.appendChild(btn);
+            });
+
+            const activeLet = letters[currentLetterIdx] || { title: "Surat Spesial", body: "Halo!", date: "Spesial" };
+            document.getElementById('sealed-letter-title').innerText = activeLet.title;
+            document.getElementById('unfolded-letter-badge').innerText = activeLet.title;
+            document.getElementById('letter-date').innerText = activeLet.date || "Hari Ini";
+        }
+
+        function crackWaxSeal() {
+            playSfx('pop');
+            const btn = document.getElementById('wax-seal-btn');
+            btn.style.animation = "crack-seal 0.6s forwards";
+
+            setTimeout(() => {
+                document.getElementById('envelope-sealed').classList.add('hidden');
+                document.getElementById('envelope-unfolded').classList.remove('hidden');
+
+                const textContainer = document.getElementById('letter-typed-text');
+                textContainer.innerText = "";
+                let i = 0;
+                const activeLet = giftConfig.letters[currentLetterIdx] || { body: "" };
+                const text = activeLet.body;
+                const timer = setInterval(() => {
+                    if (i < text.length) {
+                        textContainer.innerText += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(timer);
+                    }
+                }, 35);
+            }, 500);
+        }
+
+        /* MINI GAME SWITCHER */
+        function switchMiniGame(gameName) {
+            playSfx('pop');
+            ['memory', 'catcher', 'quiz'].forEach(g => {
+                document.getElementById(`game-view-${g}`).classList.add('hidden');
+                document.getElementById(`minigame-tab-${g}`).className = "flex-1 py-2 px-3 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition";
+            });
+
+            document.getElementById(`game-view-${gameName}`).classList.remove('hidden');
+            document.getElementById(`minigame-tab-${gameName}`).className = "flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-rose-500 text-white shadow-md transition";
+        }
+
+        /* GAME 1: MEMORY MATCH */
+        let gameCards = ['💖', '🎁', '✨', '🌸', '💖', '🎁', '✨', '🌸'];
+        let flippedCards = [];
+        let matchedCount = 0;
+        let moves = 0;
+
+        function initMemoryGame() {
+            const board = document.getElementById('game-board');
+            board.innerHTML = "";
+            flippedCards = []; matchedCount = 0; moves = 0;
+            document.getElementById('game-status').innerText = `Langkah: 0 | Cocok: 0 / 4`;
+
+            gameCards.sort(() => Math.random() - 0.5);
+            gameCards.forEach((symbol, index) => {
+                const card = document.createElement('div');
+                card.className = "memory-card h-20";
+                card.dataset.symbol = symbol;
+                card.innerHTML = `
+                    <div class="memory-card-inner">
+                        <div class="memory-card-front glass-card border border-rose-400/40 text-amber-300 text-xl font-bold"><i class="fa-solid fa-heart"></i></div>
+                        <div class="memory-card-back bg-gradient-to-tr from-rose-500 to-purple-600 text-white text-2xl font-bold">${symbol}</div>
+                    </div>
+                `;
+                card.onclick = () => flipMemoryCard(card);
+                board.appendChild(card);
+            });
+        }
+
+        function flipMemoryCard(card) {
+            if (flippedCards.length >= 2 || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+            playSfx('pop');
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                const [c1, c2] = flippedCards;
+                if (c1.dataset.symbol === c2.dataset.symbol) {
+                    playSfx('twinkle');
+                    c1.classList.add('matched'); c2.classList.add('matched');
+                    matchedCount++;
+                    flippedCards = [];
+                    document.getElementById('game-status').innerText = `Langkah: ${moves} | Cocok: ${matchedCount} / 4`;
+                    if (matchedCount === 4) {
+                        setTimeout(() => {
+                            playSfx('fanfare');
+                            confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+                        }, 400);
+                    }
+                } else {
+                    setTimeout(() => {
+                        c1.classList.remove('flipped'); c2.classList.remove('flipped');
+                        flippedCards = [];
+                        document.getElementById('game-status').innerText = `Langkah: ${moves} | Cocok: ${matchedCount} / 4`;
+                    }, 800);
+                }
+            }
+        }
+
+        /* GAME 2: HEART & STAR CATCHER */
+        let catcherScore = 0;
+        let catcherTimeLeft = 30;
+        let catcherTimer = null;
+        let catcherBasket = { x: 150, width: 70, height: 15 };
+        let fallingItems = [];
+        let isCatcherRunning = false;
+
+        function initCatcherCanvas() {
+            const canvas = document.getElementById('catcher-canvas');
+            const container = document.getElementById('catcher-canvas-container');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            const handleMove = (e) => {
+                if (!isCatcherRunning) return;
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                catcherBasket.x = clientX - rect.left - catcherBasket.width / 2;
+                if (catcherBasket.x < 0) catcherBasket.x = 0;
+                if (catcherBasket.x > canvas.width - catcherBasket.width) catcherBasket.x = canvas.width - catcherBasket.width;
+            };
+
+            container.addEventListener('mousemove', handleMove);
+            container.addEventListener('touchmove', handleMove);
+        }
+
+        function startCatcherGame() {
+            playSfx('pop');
+            document.getElementById('catcher-start-overlay').classList.add('hidden');
+            catcherScore = 0;
+            catcherTimeLeft = 30;
+            fallingItems = [];
+            isCatcherRunning = true;
+            document.getElementById('catcher-score').innerText = "0";
+            document.getElementById('catcher-timer').innerText = "30";
+
+            catcherTimer = setInterval(() => {
+                catcherTimeLeft--;
+                document.getElementById('catcher-timer').innerText = catcherTimeLeft;
+                if (catcherTimeLeft <= 0) {
+                    clearInterval(catcherTimer);
+                    isCatcherRunning = false;
+                    playSfx('fanfare');
+                    confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+                    document.getElementById('catcher-start-overlay').classList.remove('hidden');
+                    document.getElementById('catcher-start-overlay').innerHTML = `
+                        <i class="fa-solid fa-trophy text-4xl text-amber-300"></i>
+                        <h4 class="text-lg font-bold text-white">Game Selesai! Skor: ${catcherScore}</h4>
+                        <button onclick="startCatcherGame()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-bold text-xs shadow-lg hover:scale-105 transition">Main Lagi!</button>
+                    `;
+                }
+            }, 1000);
+
+            requestAnimationFrame(updateCatcherGame);
+        }
+
+        function updateCatcherGame() {
+            if (!isCatcherRunning) return;
+            const canvas = document.getElementById('catcher-canvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Spawn items
+            if (Math.random() < 0.06) {
+                fallingItems.push({
+                    x: Math.random() * (canvas.width - 20),
+                    y: 0,
+                    speed: Math.random() * 2 + 2,
+                    symbol: Math.random() > 0.4 ? '⭐' : '💖'
+                });
+            }
+
+            // Draw Basket
+            ctx.fillStyle = '#ec4899';
+            ctx.beginPath();
+            ctx.roundRect(catcherBasket.x, canvas.height - 25, catcherBasket.width, catcherBasket.height, 8);
+            ctx.fill();
+
+            // Draw & Move Falling Items
+            fallingItems.forEach((item, index) => {
+                item.y += item.speed;
+                ctx.font = '18px sans-serif';
+                ctx.fillText(item.symbol, item.x, item.y);
+
+                // Collision Detection
+                if (item.y >= canvas.height - 30 && item.y <= canvas.height - 10 &&
+                    item.x >= catcherBasket.x - 10 && item.x <= catcherBasket.x + catcherBasket.width) {
+                    playSfx('twinkle');
+                    catcherScore += 10;
+                    document.getElementById('catcher-score').innerText = catcherScore;
+                    fallingItems.splice(index, 1);
+                } else if (item.y > canvas.height) {
+                    fallingItems.splice(index, 1);
+                }
+            });
+
+            requestAnimationFrame(updateCatcherGame);
+        }
+
+        /* GAME 3: TRIVIA QUIZ */
+        let quizIndex = 0;
+        let quizScore = 0;
+        const quizQuestions = [
+            {
+                q: "Apa hal yang paling seru saat kita ngumpul?",
+                options: ["Ngobrol & Ketawa Santai", "Nonton Film Bareng", "Makan-makan Enak", "Semua Jawaban Benar!"],
+                correct: 3
+            },
+            {
+                q: "Warna atau vibe yang paling cocok buat hari spesial ini?",
+                options: ["Romantic Pink", "Midnight Gold", "Sweet Candy", "Semuanya Bagus!"],
+                correct: 3
+            }
+        ];
+
+        function initQuizGame() {
+            quizIndex = 0; quizScore = 0;
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const q = quizQuestions[quizIndex];
+            if (!q) {
+                document.getElementById('quiz-container').innerHTML = `
+                    <div class="text-center space-y-3 py-4">
+                        <i class="fa-solid fa-award text-4xl text-amber-300"></i>
+                        <h4 class="text-lg font-bold text-white">Quiz Selesai! 🎉</h4>
+                        <p class="text-xs text-gray-300">Persahabatan kita memang yang terbaik!</p>
+                        <button onclick="initQuizGame()" class="px-4 py-2 rounded-xl bg-rose-500 text-white font-bold text-xs">Ulangi Quiz</button>
+                    </div>
+                `;
                 return;
             }
 
-            const giftPayload = {
-                font: activeFontClass,
-                theme: activeTheme,
-                audio: currentAudioUrl,
-                steps: journeySteps
-            };
+            document.getElementById('quiz-progress').innerText = `Pertanyaan ${quizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-score-display').innerText = `Skor: ${quizScore}`;
+            document.getElementById('quiz-question-text').innerText = q.q;
 
-            const jsonStr = JSON.stringify(giftPayload);
-            const encoded = btoa(encodeURIComponent(jsonStr));
-            const shareUrl = `${window.location.origin}${window.location.pathname}?gift=${encoded}`;
+            const list = document.getElementById('quiz-options-list');
+            list.innerHTML = "";
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition flex items-center justify-between";
+                btn.innerHTML = `<span>${opt}</span> <i class="fa-solid fa-chevron-right text-gray-400 text-[10px]"></i>`;
+                btn.onclick = () => {
+                    playSfx('fanfare');
+                    quizScore += 50;
+                    quizIndex++;
+                    renderQuizQuestion();
+                };
+                list.appendChild(btn);
+            });
+        }
 
-            navigator.clipboard.writeText(shareUrl);
-            alert('Tautan Digital Gift berhasil disalin ke clipboard!\n\nSiap dibagikan ke penerima.');
+        /* POLAROID, VOUCHERS, STAR JAR */
+        function renderMemoriesTab() {
+            const grid = document.getElementById('polaroid-grid');
+            grid.innerHTML = "";
+            (giftConfig.photos || []).forEach((p, idx) => {
+                const rot = idx % 2 === 0 ? '-rotate-2' : 'rotate-2';
+                const el = document.createElement('div');
+                el.className = `polaroid-item bg-white p-3.5 rounded-xl text-gray-800 ${rot} transform transition cursor-pointer`;
+                el.onclick = () => openLightbox(p.url, p.caption, p.date);
+                el.innerHTML = `
+                    <div class="overflow-hidden rounded-lg bg-gray-100 h-48">
+                        <img src="${p.url}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Kenangan+Indah'">
+                    </div>
+                    <div class="pt-3 text-center">
+                        <p class="font-handwriting text-xl text-gray-800 font-bold">${p.caption}</p>
+                        <p class="text-[10px] text-gray-400 tracking-wider uppercase font-semibold">${p.date}</p>
+                    </div>
+                `;
+                grid.appendChild(el);
+            });
+        }
+
+        function openLightbox(url, caption, date) {
+            playSfx('pop');
+            document.getElementById('lightbox-img').src = url;
+            document.getElementById('lightbox-caption').innerText = caption;
+            document.getElementById('lightbox-date').innerText = date;
+            document.getElementById('modal-lightbox').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            playSfx('pop');
+            document.getElementById('modal-lightbox').classList.add('hidden');
+        }
+
+        function renderVouchersTab() {
+            const grid = document.getElementById('vouchers-grid');
+            grid.innerHTML = "";
+            (giftConfig.vouchers || []).forEach((v, idx) => {
+                const el = document.createElement('div');
+                el.className = "glass-card p-5 rounded-2xl border border-rose-500/30 flex flex-col justify-between space-y-4";
+                el.innerHTML = `
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold tracking-widest text-rose-400 uppercase">Kupon Hadiah #${idx + 1}</span>
+                        <h4 class="text-lg font-bold text-white font-serif">${v.title}</h4>
+                        <p class="text-xs text-gray-300 font-light">${v.desc}</p>
+                    </div>
+                    <button onclick="claimVoucher(this)" class="w-full py-2.5 rounded-xl bg-amber-400 text-gray-950 font-bold text-xs shadow-md transition hover:bg-amber-300 flex items-center justify-center space-x-1">
+                        <i class="fa-solid fa-check"></i> <span>Klaim Kupon Ini</span>
+                    </button>
+                `;
+                grid.appendChild(el);
+            });
+        }
+
+        function claimVoucher(btn) {
+            playSfx('fanfare');
+            confetti({ particleCount: 40, spread: 50, origin: { y: 0.7 } });
+            btn.className = "w-full py-2.5 rounded-xl bg-emerald-500 text-white font-bold text-xs shadow-md pointer-events-none flex items-center justify-center space-x-1";
+            btn.innerHTML = `<i class="fa-solid fa-check-double"></i> <span>Berhasil Diklaim!</span>`;
+        }
+
+        function renderStarJarTab() {
+            const container = document.getElementById('star-jar-container');
+            container.innerHTML = "";
+            (giftConfig.stars || []).forEach((msg) => {
+                const btn = document.createElement('button');
+                btn.className = "w-12 h-12 rounded-full glass-card border border-amber-300/40 flex items-center justify-center text-amber-300 text-xl transition transform hover:scale-125 shadow-lg";
+                btn.innerHTML = `<i class="fa-solid fa-star"></i>`;
+                btn.onclick = () => {
+                    playSfx('twinkle');
+                    const msgBox = document.getElementById('star-message-box');
+                    msgBox.innerText = `"${msg}"`;
+                    msgBox.className = "w-full bg-gradient-to-r from-amber-500/20 to-rose-500/20 backdrop-blur-md p-4 rounded-2xl border border-amber-300/50 min-h-[70px] flex items-center justify-center text-amber-200 text-sm md:text-base font-bold transition animate-fadeIn";
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        /* CUSTOMIZER MODAL & LINK GENERATOR */
+        function openCustomizerModal() {
+            playSfx('pop');
+            document.getElementById('cust-recipient').value = giftConfig.recipient || "";
+            document.getElementById('cust-sender').value = giftConfig.sender || "";
+            document.getElementById('cust-yturl').value = giftConfig.youtubeUrl || "";
+            document.getElementById('cust-letter1-title').value = giftConfig.letters[0]?.title || "";
+            document.getElementById('cust-letter1-body').value = giftConfig.letters[0]?.body || "";
+            document.getElementById('cust-letter2-title').value = giftConfig.letters[1]?.title || "";
+            document.getElementById('cust-letter2-body').value = giftConfig.letters[1]?.body || "";
+            document.getElementById('modal-customizer').classList.remove('hidden');
+        }
+
+        function closeCustomizerModal() {
+            playSfx('pop');
+            document.getElementById('modal-customizer').classList.add('hidden');
+        }
+
+        function generateCustomGiftLink() {
+            giftConfig.recipient = document.getElementById('cust-recipient').value || "Sahabat";
+            giftConfig.sender = document.getElementById('cust-sender').value || "Teman";
+            giftConfig.youtubeUrl = document.getElementById('cust-yturl').value || "https://www.youtube.com/watch?v=jfKfPfyJRdk";
+
+            giftConfig.letters = [
+                {
+                    title: document.getElementById('cust-letter1-title').value || "Surat #1",
+                    body: document.getElementById('cust-letter1-body').value || "Selamat Hari Spesial!",
+                    date: "Spesial"
+                },
+                {
+                    title: document.getElementById('cust-letter2-title').value || "Surat #2",
+                    body: document.getElementById('cust-letter2-body').value || "Harapan Terbaik!",
+                    date: "Doa Tulus"
+                }
+            ];
+
+            const jsonStr = JSON.stringify(giftConfig);
+            const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+            const shareUrl = `${window.location.origin}${window.location.pathname}#${encoded}`;
+
+            const tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = shareUrl;
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            playSfx('fanfare');
+            alert(`✨ Link Kado Berhasil Dibuat dan Disalin ke Clipboard!\n\nKirimkan link ini ke ${giftConfig.recipient}!`);
+
+            window.location.hash = encoded;
+            closeCustomizerModal();
+            renderUIFromConfig();
+            resetToLanding();
         }
     </script>
 </body>
