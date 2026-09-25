@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital GiftMaker Studio V2</title>
+
+    <!-- Google Fonts & Canvas Confetti -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@500;700&family=Outfit:wght@300;400;600;700&family=Pacifico&family=Press+Start+2P&family=Quicksand:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #fff0f3;
+            --sidebar-bg: #ffffff;
+            --primary-pink: #ff758f;
+            --accent-pink: #ff4d6d;
+            --dark-pink: #c9184a;
+            --text-main: #2b2d42;
+            --text-muted: #8d99ae;
+            --border-color: #ffccd5;
+            --radius-md: 12px;
+            --shadow-soft: 0 8px 24px rgba(255, 117, 143, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Top Bar Header */
+        .app-header {
+            height: 55px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+            position: relative;
+        }
+
+        .app-logo {
+            font-family: 'Pacifico', cursive;
+            color: var(--accent-pink);
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary { background: var(--accent-pink); color: #fff; }
+        .btn-secondary { background: #f0f0f0; color: var(--text-main); }
+        .btn-purple { background: #7209b7; color: #fff; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Main Editor Layout Grid */
+        .editor-container {
+            display: grid;
+            grid-template-columns: 360px 1fr 320px;
+            height: calc(100vh - 100px);
+        }
+
+        /* Left Sidebar: Nav Tabs + Library Content */
+        .sidebar-left {
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tool-tabs {
+            display: flex;
+            overflow-x: auto;
+            background: #fff5f7;
+            padding: 8px;
+            gap: 6px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tool-tab-btn {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .tool-tab-btn.active {
+            background: #ffffff;
+            color: var(--accent-pink);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .library-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            outline: none;
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+        }
+
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .preset-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .preset-card:hover {
+            border-color: var(--accent-pink);
+            box-shadow: var(--shadow-soft);
+            transform: translateY(-2px);
+        }
+
+        .symbol-grid-box {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .symbol-btn {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .symbol-btn:hover { transform: scale(1.2); background: #fff0f3; }
+
+        /* Middle Area: Canvas & Phone Viewport */
+        .workspace-canvas {
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phone-viewport {
+            width: 360px;
+            height: 640px;
+            background: #ffffff;
+            border-radius: 40px;
+            border: 10px solid #1a1a1a;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone-notch {
+            width: 120px;
+            height: 20px;
+            background: #1a1a1a;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 50;
+        }
+
+        .phone-screen-content {
+            flex: 1;
+            position: relative;
+            overflow-y: auto;
+            padding: 30px 16px 16px 16px;
+            background-color: var(--bg-base);
+        }
+
+        /* Canvas Draggable Elements */
+        .canvas-element {
+            position: absolute;
+            cursor: move;
+            padding: 6px;
+            border: 1px dashed transparent;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+
+        .canvas-element:hover, .canvas-element.selected {
+            border-color: var(--accent-pink);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Right Sidebar: Contextual Properties Panel */
+        .sidebar-right {
+            background: var(--sidebar-bg);
+            border-left: 1px solid var(--border-color);
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .prop-section {
+            margin-bottom: 18px;
+        }
+
+        .prop-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .prop-input, .prop-select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 0.85rem;
+        }
+
+        /* Bottom Bar: Page Navigation */
+        .page-bar {
+            height: 45px;
+            background: #ffffff;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        .page-chip {
+            padding: 6px 14px;
+            border-radius: 16px;
+            background: #f0f0f0;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .page-chip.active {
+            background: var(--accent-pink);
+            color: #ffffff;
+        }
+
+        /* Modal Customizer Game */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.2s;
+        }
+
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-card {
+            background: #fff;
+            width: 440px;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        #effects-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="app-header">
+    <div class="app-logo">🎁 Digital GiftMaker Studio</div>
+    <div class="header-actions">
+        <button class="btn btn-purple" onclick="togglePreviewMode()">👁️ Preview Mode</button>
+        <button class="btn btn-secondary" onclick="saveDraft()">💾 Save Draft</button>
+        <button class="btn btn-primary" onclick="publishGift()">🚀 Publish & Share</button>
+    </div>
+</header>
+
+<!-- Main Workspace -->
+<div class="editor-container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
+        <div class="tool-tabs">
+            <button class="tool-tab-btn active" onclick="switchToolTab('text')">✏️ Text</button>
+            <button class="tool-tab-btn" onclick="switchToolTab('symbols')">🎀 Stickers</button>
+            <button class="tool-tab-btn" onclick="switchToolTab('photos')">📸 Photos</button>
+            <button class="tool-tab-btn" onclick="switchToolTab('letters')">💌 Letters</button>
+            <button class="tool-tab-btn" onclick="switchToolTab('games')">🎮 Games</button>
+            <button class="tool-tab-btn" onclick="switchToolTab('effects')">🌸 Effects</button>
+        </div>
+        <div class="library-panel" id="library-content-area">
+            <!-- Dynamic Content Insertion -->
+        </div>
+    </aside>
+
+    <!-- Canvas Phone -->
+    <main class="workspace-canvas">
+        <div class="phone-viewport">
+            <div class="phone-notch"></div>
+            <canvas id="effects-canvas"></canvas>
+            <div class="phone-screen-content" id="active-phone-canvas" onclick="deselectAllElements()">
+                <!-- Elements Added Here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar-right" id="properties-panel">
+        <h3>Properties Panel</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Pilih elemen di canvas untuk mengatur font, warna, animasi, atau menggeser posisinya.</p>
+    </aside>
+</div>
+
+<!-- Page Manager -->
+<footer class="page-bar">
+    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">PAGES:</span>
+    <div class="page-chip active">Page 1: Cover</div>
+    <div class="page-chip">Page 2: Memories</div>
+    <div class="page-chip">Page 3: Mini Game</div>
+    <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 0.75rem;" onclick="addNewPage()">+ Add Page</button>
+</footer>
+
+<!-- Game Config Modal -->
+<div class="modal-overlay" id="game-config-modal">
+    <div class="modal-card">
+        <h3 style="margin-bottom: 14px; color: var(--accent-pink);">🎮 Game Customizer</h3>
+        <div class="prop-section">
+            <label class="prop-label">Pertanyaan / Clue Kuis</label>
+            <input type="text" id="cfg-game-q" class="prop-input" value="🍕 + 🧀 = ?">
+        </div>
+        <div class="prop-section">
+            <label class="prop-label">Kunci Jawaban Benar</label>
+            <input type="text" id="cfg-game-ans" class="prop-input" value="Pizza">
+        </div>
+        <div class="prop-section">
+            <label class="prop-label">Pesan Berhasil</label>
+            <input type="text" id="cfg-game-success" class="prop-input" value="Hehe pinter banget ketebak! 💗">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+            <button class="btn btn-secondary" onclick="closeGameModal()">Batal</button>
+            <button class="btn btn-primary" onclick="confirmAddGame()">Simpan & Tambah Game</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* --- DATA LIBRARIES LOKAL LENGKAP --- */
+    const SYMBOL_CATEGORIES = {
+        'Love': ['♡', '♥︎', '❤︎', 'ღ', '❥', '❣︎', 'ꨄ', '୨୧', '💗', '💌', '❣', 'ᰔ'],
+        'Sparkle': ['✦', '✧', '⋆', '˚₊‧', '⟡', '✮', '✯', '✰', '⭐', '🌟', '💫'],
+        'Cute': ['𐙚', '𓆩♡𓆪', '𓏲🩺', '🎀', '🧸', '🐰', '🐈', '🐾', '🎀', '🍥'],
+        'Flowers': ['❀', '✿', '❁', '🌷', '🌸', '🌹', '🌼', '🌺', '🌱', '🌻']
+    };
+
+    const TEXT_PRESETS = [
+        { type: 'Big Title', font: 'Pacifico', size: '28px' },
+        { type: 'Subtitle', font: 'Quicksand', size: '18px' },
+        { type: 'Paragraph', font: 'Outfit', size: '14px' },
+        { type: 'Quote', font: 'Dancing Script', size: '22px' },
+        { type: 'Handwritten', font: 'Caveat', size: '22px' },
+        { type: 'Pixel Style', font: 'Press Start 2P', size: '12px' }
+    ];
+
+    const PHOTO_LAYOUTS = [
+        'Single Polaroid', 'Double Polaroid Stack', 'Triple Polaroid', '4 Polaroid Grid',
+        'Photo Strip 3', 'Film Strip Vintage', '2x2 Grid Frame', '3x2 Grid Frame',
+        'Heart Collage', 'Scrapbook Corner', 'Washi Tape Frame', 'Instant Camera Retro'
+    ];
+
+    const LETTER_TEMPLATES = [
+        { name: 'Classic Envelope', mechanic: 'Klik amplop untuk mengeluarkan surat' },
+        { name: 'Ribbon Letter', mechanic: 'Tarik pita untuk melepas ikatan' },
+        { name: 'Typewriter Reveal', mechanic: 'Teks mengetik otomatis satu-satu' },
+        { name: 'Old Vintage Scroll', mechanic: 'Gulungan kertas tua tergelar' },
+        { name: 'Secret Locked Letter', mechanic: 'Membutuhkan PIN rahasia untuk buka' }
+    ];
+
+    const GAME_TEMPLATES = [
+        { name: 'Emoji Guess Quiz', type: 'quiz' },
+        { name: 'Memory Card Match', type: 'memory' },
+        { name: 'Couple Trivia Quiz', type: 'trivia' },
+        { name: 'Lucky Scratch Card', type: 'scratch' },
+        { name: 'Spin the Wheel', type: 'spin' }
+    ];
+
+    let selectedElement = null;
+
+    /* --- INITIALIZATION & TABS --- */
+    document.addEventListener('DOMContentLoaded', () => {
+        switchToolTab('text');
+        initParticleEngine();
+    });
+
+    function switchToolTab(tab) {
+        document.querySelectorAll('.tool-tab-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+
+        const container = document.getElementById('library-content-area');
+        container.innerHTML = '';
+
+        if (tab === 'text') {
+            TEXT_PRESETS.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'preset-card';
+                card.innerHTML = `<strong style="font-family:${p.font}; font-size:1.1rem;">${p.type}</strong><p style="font-size:0.75rem; color:#888;">Klik untuk tambah teks</p>`;
+                card.onclick = () => createTextElement(p);
+                container.appendChild(card);
+            });
+        } else if (tab === 'symbols') {
+            const search = document.createElement('input');
+            search.className = 'search-input';
+            search.placeholder = '🔍 Cari stiker atau simbol...';
+            container.appendChild(search);
+
+            Object.keys(SYMBOL_CATEGORIES).forEach(cat => {
+                const title = document.createElement('h4');
+                title.style.margin = '10px 0 6px 0';
+                title.style.fontSize = '0.85rem';
+                title.innerText = cat;
+                container.appendChild(title);
+
+                const grid = document.createElement('div');
+                grid.className = 'symbol-grid-box';
+                SYMBOL_CATEGORIES[cat].forEach(sym => {
+                    const btn = document.createElement('div');
+                    btn.className = 'symbol-btn';
+                    btn.innerText = sym;
+                    btn.onclick = () => createSymbolElement(sym);
+                    grid.appendChild(btn);
+                });
+                container.appendChild(grid);
+            });
+        } else if (tab === 'photos') {
+            const grid = document.createElement('div');
+            grid.className = 'preset-grid';
+            PHOTO_LAYOUTS.forEach(layout => {
+                const card = document.createElement('div');
+                card.className = 'preset-card';
+                card.innerHTML = `<strong>🖼️ ${layout}</strong>`;
+                card.onclick = () => createPhotoLayoutElement(layout);
+                grid.appendChild(card);
+            });
+            container.appendChild(grid);
+        } else if (tab === 'letters') {
+            LETTER_TEMPLATES.forEach(letr => {
+                const card = document.createElement('div');
+                card.className = 'preset-card';
+                card.style.marginBottom = '8px';
+                card.innerHTML = `<strong>✉️ ${letr.name}</strong><p style="font-size:0.75rem; color:#888;">${letr.mechanic}</p>`;
+                card.onclick = () => createLetterElement(letr.name);
+                container.appendChild(card);
+            });
+        } else if (tab === 'games') {
+            GAME_TEMPLATES.forEach(g => {
+                const card = document.createElement('div');
+                card.className = 'preset-card';
+                card.style.marginBottom = '8px';
+                card.innerHTML = `<strong>🎮 ${g.name}</strong><p style="font-size:0.75rem; color:#888;">Klik untuk kustomisasi & pasang</p>`;
+                card.onclick = () => openGameModal(g.name);
+                container.appendChild(card);
+            });
+        } else if (tab === 'effects') {
+            container.innerHTML = `
+                <div class="prop-section">
+                    <label class="prop-label">Pilih Jenis Efek Partikel</label>
+                    <select class="prop-select" onchange="setEffectType(this.value)">
+                        <option value="hearts">💕 Floating Hearts</option>
+                        <option value="sparkles">✨ Magical Sparkles</option>
+                        <option value="petals">🌸 Falling Sakura Petals</option>
+                    </select>
+                </div>
+            `;
+        }
+    }
+
+    /* --- ELEMENT CREATION ON CANVAS --- */
+    function createTextElement(spec) {
+        const canvas = document.getElementById('active-phone-canvas');
+        const el = document.createElement('div');
+        el.className = 'canvas-element';
+        el.style.left = '20px';
+        el.style.top = '40px';
+        el.style.fontFamily = spec.font;
+        el.style.fontSize = spec.size;
+        el.style.color = '#ff4d6d';
+        el.innerText = 'Ketik pesanmu di sini ♡';
+
+        makeDraggable(el);
+        el.ondblclick = () => {
+            const txt = prompt('Edit teks:', el.innerText);
+            if (txt) el.innerText = txt;
+        };
+        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'text'); };
+
+        canvas.appendChild(el);
+        selectElement(el, 'text');
+    }
+
+    function createSymbolElement(sym) {
+        const canvas = document.getElementById('active-phone-canvas');
+        const el = document.createElement('div');
+        el.className = 'canvas-element';
+        el.style.left = '40px';
+        el.style.top = '80px';
+        el.style.fontSize = '32px';
+        el.innerText = sym;
+
+        makeDraggable(el);
+        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'symbol'); };
+        canvas.appendChild(el);
+    }
+
+    function createPhotoLayoutElement(layoutName) {
+        const canvas = document.getElementById('active-phone-canvas');
+        const el = document.createElement('div');
+        el.className = 'canvas-element';
+        el.style.left = '20px';
+        el.style.top = '120px';
+        el.style.background = '#fff';
+        el.style.padding = '10px';
+        el.style.borderRadius = '12px';
+        el.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+        el.innerHTML = `<div style="width:180px; height:120px; background:#ffe5ec; border-radius:8px; display:flex; justify-content:center; align-items:center; color:#ff758f;">📷 Foto Upload</div><p style="text-align:center; font-size:0.8rem; margin-top:6px; font-family:'Caveat';">${layoutName}</p>`;
+
+        makeDraggable(el);
+        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'photo'); };
+        canvas.appendChild(el);
+    }
+
+    function createLetterElement(letterName) {
+        const canvas = document.getElementById('active-phone-canvas');
+        const el = document.createElement('div');
+        el.className = 'canvas-element';
+        el.style.left = '20px';
+        el.style.top = '180px';
+        el.style.background = '#fff0f3';
+        el.style.border = '2px dashed #ff758f';
+        el.style.padding = '12px';
+        el.style.borderRadius = '12px';
+        el.innerHTML = `<strong>✉️ ${letterName}</strong><p style="font-size:0.75rem; color:#666;">Klik untuk membuka surat interaktif</p>`;
+
+        makeDraggable(el);
+        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'letter'); };
+        canvas.appendChild(el);
+    }
+
+    /* --- DRAGGABLE ENGINE --- */
+    function makeDraggable(el) {
+        let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
+        el.onmousedown = (e) => {
+            e.preventDefault();
+            mouseX = e.clientX; mouseY = e.clientY;
+            document.onmouseup = () => { document.onmouseup = null; document.onmousemove = null; };
+            document.onmousemove = (e) => {
+                posX = mouseX - e.clientX; posY = mouseY - e.clientY;
+                mouseX = e.clientX; mouseY = e.clientY;
+                el.style.top = (el.offsetTop - posY) + "px";
+                el.style.left = (el.offsetLeft - posX) + "px";
+            };
+        };
+    }
+
+    /* --- CONTEXTUAL PROPERTIES PANEL --- */
+    function selectElement(el, type) {
+        if (selectedElement) selectedElement.classList.remove('selected');
+        selectedElement = el;
+        selectedElement.classList.add('selected');
+
+        const panel = document.getElementById('properties-panel');
+        panel.innerHTML = `<h3>Edit Properti (${type.toUpperCase()})</h3><br>`;
+
+        if (type === 'text') {
+            panel.innerHTML += `
+                <div class="prop-section">
+                    <label class="prop-label">Isi Teks</label>
+                    <input type="text" class="prop-input" value="${el.innerText}" oninput="selectedElement.innerText = this.value">
+                </div>
+                <div class="prop-section">
+                    <label class="prop-label">Warna Teks</label>
+                    <input type="color" class="prop-input" value="#ff4d6d" onchange="selectedElement.style.color = this.value">
+                </div>
+            `;
+        }
+        panel.innerHTML += `<button class="btn btn-primary" style="background:#e74c3c; width:100%; margin-top:10px;" onclick="selectedElement.remove(); deselectAllElements();">🗑️ Hapus Elemen</button>`;
+    }
+
+    function deselectAllElements() {
+        if (selectedElement) selectedElement.classList.remove('selected');
+        selectedElement = null;
+        document.getElementById('properties-panel').innerHTML = `<h3>Properties Panel</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Pilih elemen di canvas untuk mengatur properti.</p>`;
+    }
+
+    /* --- GAME MODAL LOGIC --- */
+    function openGameModal(name) {
+        document.getElementById('game-config-modal').classList.add('active');
+    }
+
+    function closeGameModal() {
+        document.getElementById('game-config-modal').classList.remove('active');
+    }
+
+    function confirmAddGame() {
+        closeGameModal();
+        const canvas = document.getElementById('active-phone-canvas');
+        const el = document.createElement('div');
+        el.className = 'canvas-element';
+        el.style.left = '20px';
+        el.style.top = '220px';
+        el.style.background = '#ffffff';
+        el.style.border = '2px solid #ff4d6d';
+        el.style.padding = '12px';
+        el.style.borderRadius = '14px';
+        el.innerHTML = `<strong style="color:#ff4d6d">🎮 Custom Kuis</strong><p style="font-size:0.8rem;">${document.getElementById('cfg-game-q').value}</p>`;
+
+        makeDraggable(el);
+        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'game'); };
+        canvas.appendChild(el);
+    }
+
+    /* --- CANVAS PARTICLE ENGINE --- */
+    let currentParticleType = 'hearts';
+    function initParticleEngine() {
+        const canvas = document.getElementById('effects-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 340; canvas.height = 620;
+
+        const particles = Array.from({ length: 15 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 4 + 2,
+            speedY: Math.random() * 0.8 + 0.3
+        }));
+
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = currentParticleType === 'petals' ? '#ffb3c1' : '#ff4d6d';
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                p.y -= p.speedY;
+                if (p.y < 0) p.y = canvas.height;
+            });
+            requestAnimationFrame(render);
+        }
+        render();
+    }
+
+    function setEffectType(type) { currentParticleType = type; }
+    function saveDraft() { alert('Draft berhasil disimpan ♡'); }
+    function publishGift() { alert('Kado berhasil dipublish!'); }
+    function togglePreviewMode() { alert('Memasuki mode preview penerima kado ✨'); }
+    function addNewPage() { alert('Halaman baru ditambahkan!'); }
+</script>
+</body>
+</html>
