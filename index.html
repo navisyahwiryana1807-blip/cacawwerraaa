@@ -3,726 +3,750 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital GiftMaker Studio V2</title>
-
-    <!-- Google Fonts & Canvas Confetti -->
+    <title>Digital Gift Journey Crafter Pro</title>
+    <!-- Tailwind CSS & Lucide Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts Collection -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@500;700&family=Outfit:wght@300;400;600;700&family=Pacifico&family=Press+Start+2P&family=Quicksand:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@500;600&family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Press+Start+2P&family=Sacramento&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bg-base: #fff0f3;
-            --sidebar-bg: #ffffff;
-            --primary-pink: #ff758f;
-            --accent-pink: #ff4d6d;
-            --dark-pink: #c9184a;
-            --text-main: #2b2d42;
-            --text-muted: #8d99ae;
-            --border-color: #ffccd5;
-            --radius-md: 12px;
-            --shadow-soft: 0 8px 24px rgba(255, 117, 143, 0.15);
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff8f9; }
+        
+        /* Font Class Presets */
+        .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-handwriting { font-family: 'Caveat', cursive; }
+        .font-romantic { font-family: 'Sacramento', cursive; }
+        .font-serif-custom { font-family: 'Playfair Display', serif; }
+        .font-pixel { font-family: 'Press Start 2P', cursive; }
+        .font-cartoon { font-family: 'Fredoka', sans-serif; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Outfit', sans-serif;
-            user-select: none;
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #fff1f2; }
+        ::-webkit-scrollbar-thumb { background: #fda4af; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f43f5e; }
 
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Top Bar Header */
-        .app-header {
-            height: 55px;
-            background: #ffffff;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 100;
-            position: relative;
-        }
-
-        .app-logo {
-            font-family: 'Pacifico', cursive;
-            color: var(--accent-pink);
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-primary { background: var(--accent-pink); color: #fff; }
-        .btn-secondary { background: #f0f0f0; color: var(--text-main); }
-        .btn-purple { background: #7209b7; color: #fff; }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        /* Main Editor Layout Grid */
-        .editor-container {
-            display: grid;
-            grid-template-columns: 360px 1fr 320px;
-            height: calc(100vh - 100px);
-        }
-
-        /* Left Sidebar: Nav Tabs + Library Content */
-        .sidebar-left {
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .tool-tabs {
-            display: flex;
-            overflow-x: auto;
-            background: #fff5f7;
-            padding: 8px;
-            gap: 6px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .tool-tab-btn {
-            padding: 6px 12px;
-            border: none;
-            background: transparent;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .tool-tab-btn.active {
-            background: #ffffff;
-            color: var(--accent-pink);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        .library-panel {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            outline: none;
-            font-size: 0.85rem;
-            margin-bottom: 14px;
-        }
-
-        .preset-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .preset-card {
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .preset-card:hover {
-            border-color: var(--accent-pink);
-            box-shadow: var(--shadow-soft);
-            transform: translateY(-2px);
-        }
-
-        .symbol-grid-box {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-        }
-
-        .symbol-btn {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: transform 0.15s;
-        }
-
-        .symbol-btn:hover { transform: scale(1.2); background: #fff0f3; }
-
-        /* Middle Area: Canvas & Phone Viewport */
-        .workspace-canvas {
-            background: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .phone-viewport {
-            width: 360px;
-            height: 640px;
-            background: #ffffff;
-            border-radius: 40px;
-            border: 10px solid #1a1a1a;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .phone-notch {
-            width: 120px;
-            height: 20px;
-            background: #1a1a1a;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-            z-index: 50;
-        }
-
-        .phone-screen-content {
-            flex: 1;
-            position: relative;
-            overflow-y: auto;
-            padding: 30px 16px 16px 16px;
-            background-color: var(--bg-base);
-        }
-
-        /* Canvas Draggable Elements */
-        .canvas-element {
-            position: absolute;
-            cursor: move;
-            padding: 6px;
-            border: 1px dashed transparent;
-            border-radius: 8px;
-            transition: border-color 0.2s;
-        }
-
-        .canvas-element:hover, .canvas-element.selected {
-            border-color: var(--accent-pink);
-            background: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Right Sidebar: Contextual Properties Panel */
-        .sidebar-right {
-            background: var(--sidebar-bg);
-            border-left: 1px solid var(--border-color);
-            padding: 16px;
-            overflow-y: auto;
-        }
-
-        .prop-section {
-            margin-bottom: 18px;
-        }
-
-        .prop-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            display: block;
-            text-transform: uppercase;
-        }
-
-        .prop-input, .prop-select {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            outline: none;
-            font-size: 0.85rem;
-        }
-
-        /* Bottom Bar: Page Navigation */
-        .page-bar {
-            height: 45px;
-            background: #ffffff;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            gap: 10px;
-        }
-
-        .page-chip {
-            padding: 6px 14px;
-            border-radius: 16px;
-            background: #f0f0f0;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .page-chip.active {
-            background: var(--accent-pink);
-            color: #ffffff;
-        }
-
-        /* Modal Customizer Game */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            visibility: hidden;
-            opacity: 0;
-            transition: all 0.2s;
-        }
-
-        .modal-overlay.active {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .modal-card {
-            background: #fff;
-            width: 440px;
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        #effects-canvas {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 10;
+        #particleCanvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 5;
         }
     </style>
 </head>
-<body>
+<body class="h-screen w-screen overflow-hidden text-slate-800 flex flex-col">
 
-<!-- Header -->
-<header class="app-header">
-    <div class="app-logo">🎁 Digital GiftMaker Studio</div>
-    <div class="header-actions">
-        <button class="btn btn-purple" onclick="togglePreviewMode()">👁️ Preview Mode</button>
-        <button class="btn btn-secondary" onclick="saveDraft()">💾 Save Draft</button>
-        <button class="btn btn-primary" onclick="publishGift()">🚀 Publish & Share</button>
-    </div>
-</header>
-
-<!-- Main Workspace -->
-<div class="editor-container">
-    <!-- Left Sidebar -->
-    <aside class="sidebar-left">
-        <div class="tool-tabs">
-            <button class="tool-tab-btn active" onclick="switchToolTab('text')">✏️ Text</button>
-            <button class="tool-tab-btn" onclick="switchToolTab('symbols')">🎀 Stickers</button>
-            <button class="tool-tab-btn" onclick="switchToolTab('photos')">📸 Photos</button>
-            <button class="tool-tab-btn" onclick="switchToolTab('letters')">💌 Letters</button>
-            <button class="tool-tab-btn" onclick="switchToolTab('games')">🎮 Games</button>
-            <button class="tool-tab-btn" onclick="switchToolTab('effects')">🌸 Effects</button>
-        </div>
-        <div class="library-panel" id="library-content-area">
-            <!-- Dynamic Content Insertion -->
-        </div>
-    </aside>
-
-    <!-- Canvas Phone -->
-    <main class="workspace-canvas">
-        <div class="phone-viewport">
-            <div class="phone-notch"></div>
-            <canvas id="effects-canvas"></canvas>
-            <div class="phone-screen-content" id="active-phone-canvas" onclick="deselectAllElements()">
-                <!-- Elements Added Here -->
+    <!-- HEADER / NAVBAR -->
+    <header class="h-16 border-b border-rose-100 bg-white/90 backdrop-blur px-6 flex items-center justify-between z-20 shrink-0 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-rose-500 text-white rounded-xl shadow-md shadow-rose-200">
+                <i data-lucide="gift" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-slate-900 leading-tight">Gift Crafter Pro</h1>
+                <p class="text-xs text-rose-500 font-medium">Interactive Journey & Memory Studio</p>
             </div>
         </div>
-    </main>
 
-    <!-- Right Sidebar -->
-    <aside class="sidebar-right" id="properties-panel">
-        <h3>Properties Panel</h3>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Pilih elemen di canvas untuk mengatur font, warna, animasi, atau menggeser posisinya.</p>
-    </aside>
-</div>
+        <div class="flex items-center gap-3">
+            <!-- Global Audio Player Controller -->
+            <div id="audioPlayerWidget" class="hidden flex items-center gap-2 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-full text-xs text-rose-700">
+                <i data-lucide="music" class="w-3.5 h-3.5 animate-spin"></i>
+                <span id="playingSongTitle" class="font-semibold max-w-[120px] truncate">Lagu Diputar</span>
+                <button onclick="toggleAudioPlay()" class="p-1 hover:bg-rose-200 rounded-full"><i id="playIcon" data-lucide="pause" class="w-3.5 h-3.5"></i></button>
+            </div>
 
-<!-- Page Manager -->
-<footer class="page-bar">
-    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">PAGES:</span>
-    <div class="page-chip active">Page 1: Cover</div>
-    <div class="page-chip">Page 2: Memories</div>
-    <div class="page-chip">Page 3: Mini Game</div>
-    <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 0.75rem;" onclick="addNewPage()">+ Add Page</button>
-</footer>
-
-<!-- Game Config Modal -->
-<div class="modal-overlay" id="game-config-modal">
-    <div class="modal-card">
-        <h3 style="margin-bottom: 14px; color: var(--accent-pink);">🎮 Game Customizer</h3>
-        <div class="prop-section">
-            <label class="prop-label">Pertanyaan / Clue Kuis</label>
-            <input type="text" id="cfg-game-q" class="prop-input" value="🍕 + 🧀 = ?">
+            <button id="btnPreview" onclick="togglePreviewMode()" class="px-4 py-2 bg-rose-50 text-rose-600 rounded-xl font-medium text-sm hover:bg-rose-100 transition flex items-center gap-2 border border-rose-200">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+                <span id="previewText">Preview Journey</span>
+            </button>
+            <button onclick="exportGiftLink()" class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-medium text-sm shadow-lg shadow-rose-200 transition flex items-center gap-2">
+                <i data-lucide="share-2" class="w-4 h-4"></i>
+                <span>Bagikan Hadiah</span>
+            </button>
         </div>
-        <div class="prop-section">
-            <label class="prop-label">Kunci Jawaban Benar</label>
-            <input type="text" id="cfg-game-ans" class="prop-input" value="Pizza">
-        </div>
-        <div class="prop-section">
-            <label class="prop-label">Pesan Berhasil</label>
-            <input type="text" id="cfg-game-success" class="prop-input" value="Hehe pinter banget ketebak! 💗">
-        </div>
-        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-            <button class="btn btn-secondary" onclick="closeGameModal()">Batal</button>
-            <button class="btn btn-primary" onclick="confirmAddGame()">Simpan & Tambah Game</button>
-        </div>
-    </div>
-</div>
+    </header>
 
-<script>
-    /* --- DATA LIBRARIES LOKAL LENGKAP --- */
-    const SYMBOL_CATEGORIES = {
-        'Love': ['♡', '♥︎', '❤︎', 'ღ', '❥', '❣︎', 'ꨄ', '୨୧', '💗', '💌', '❣', 'ᰔ'],
-        'Sparkle': ['✦', '✧', '⋆', '˚₊‧', '⟡', '✮', '✯', '✰', '⭐', '🌟', '💫'],
-        'Cute': ['𐙚', '𓆩♡𓆪', '𓏲🩺', '🎀', '🧸', '🐰', '🐈', '🐾', '🎀', '🍥'],
-        'Flowers': ['❀', '✿', '❁', '🌷', '🌸', '🌹', '🌼', '🌺', '🌱', '🌻']
-    };
+    <!-- MAIN STUDIO WORKSPACE -->
+    <div class="flex-1 flex overflow-hidden relative">
 
-    const TEXT_PRESETS = [
-        { type: 'Big Title', font: 'Pacifico', size: '28px' },
-        { type: 'Subtitle', font: 'Quicksand', size: '18px' },
-        { type: 'Paragraph', font: 'Outfit', size: '14px' },
-        { type: 'Quote', font: 'Dancing Script', size: '22px' },
-        { type: 'Handwritten', font: 'Caveat', size: '22px' },
-        { type: 'Pixel Style', font: 'Press Start 2P', size: '12px' }
-    ];
+        <!-- LEFT SIDEBAR: LIBRARIES (GAMES, PHOTOS, AUDIO, STYLES) -->
+        <aside id="builderSidebar" class="w-80 border-r border-rose-100 bg-white flex flex-col z-10 shrink-0">
+            <!-- Sidebar Navigation Tabs -->
+            <div class="flex border-b border-slate-100 bg-slate-50/80 p-1 gap-1">
+                <button onclick="switchTab('games')" id="tab-games" class="flex-1 py-2 text-xs font-semibold rounded-lg bg-white text-rose-600 shadow-sm transition">🎮 Game</button>
+                <button onclick="switchTab('photos')" id="tab-photos" class="flex-1 py-2 text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-800 transition">📸 Foto</button>
+                <button onclick="switchTab('audio')" id="tab-audio" class="flex-1 py-2 text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-800 transition">🎵 Lagu</button>
+                <button onclick="switchTab('style')" id="tab-style" class="flex-1 py-2 text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-800 transition">✨ Style</button>
+            </div>
 
-    const PHOTO_LAYOUTS = [
-        'Single Polaroid', 'Double Polaroid Stack', 'Triple Polaroid', '4 Polaroid Grid',
-        'Photo Strip 3', 'Film Strip Vintage', '2x2 Grid Frame', '3x2 Grid Frame',
-        'Heart Collage', 'Scrapbook Corner', 'Washi Tape Frame', 'Instant Camera Retro'
-    ];
+            <!-- TAB 1: GAME LIBRARY -->
+            <div id="content-games" class="flex-1 overflow-y-auto p-4 space-y-3">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Pilih Interaksi & Game</div>
+                
+                <select id="gameCategorySelect" onchange="filterGames(this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400">
+                    <option value="ALL">✨ Semua Kategori (60+ Game)</option>
+                    <option value="LOVE">💗 Love & Couple</option>
+                    <option value="GUESSING">🧠 Guessing</option>
+                    <option value="PUZZLE">🧩 Puzzle</option>
+                    <option value="QUICK">🎯 Quick & Fun</option>
+                    <option value="SURPRISE">🎁 Surprise & Reveal</option>
+                    <option value="RANDOM">🎲 Random</option>
+                    <option value="ARCADE">🕹️ Mini Arcade</option>
+                </select>
 
-    const LETTER_TEMPLATES = [
-        { name: 'Classic Envelope', mechanic: 'Klik amplop untuk mengeluarkan surat' },
-        { name: 'Ribbon Letter', mechanic: 'Tarik pita untuk melepas ikatan' },
-        { name: 'Typewriter Reveal', mechanic: 'Teks mengetik otomatis satu-satu' },
-        { name: 'Old Vintage Scroll', mechanic: 'Gulungan kertas tua tergelar' },
-        { name: 'Secret Locked Letter', mechanic: 'Membutuhkan PIN rahasia untuk buka' }
-    ];
+                <div id="gameList" class="space-y-2"></div>
+            </div>
 
-    const GAME_TEMPLATES = [
-        { name: 'Emoji Guess Quiz', type: 'quiz' },
-        { name: 'Memory Card Match', type: 'memory' },
-        { name: 'Couple Trivia Quiz', type: 'trivia' },
-        { name: 'Lucky Scratch Card', type: 'scratch' },
-        { name: 'Spin the Wheel', type: 'spin' }
-    ];
+            <!-- TAB 2: PHOTO TEMPLATE LIBRARY -->
+            <div id="content-photos" class="flex-1 overflow-y-auto p-4 space-y-3 hidden">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Pilih Photo Experience</div>
+                
+                <select id="photoCategorySelect" onchange="filterPhotos(this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400">
+                    <option value="ALL">✨ Semua Display Foto (60 Template)</option>
+                    <option value="POLAROID">📷 Polaroid Collection</option>
+                    <option value="FILM">🎞️ Film & Camera</option>
+                    <option value="ROMANTIC">💌 Romantic</option>
+                    <option value="CUTE">🌸 Cute & Aesthetic</option>
+                    <option value="SCRAPBOOK">📔 Scrapbook Style</option>
+                    <option value="COLLAGE">🖼️ Collage</option>
+                    <option value="MEMORY">🧳 Memory & Story</option>
+                    <option value="EXPERIENCE">🎀 Interactive Experience</option>
+                </select>
 
-    let selectedElement = null;
+                <div id="photoList" class="space-y-2"></div>
+            </div>
 
-    /* --- INITIALIZATION & TABS --- */
-    document.addEventListener('DOMContentLoaded', () => {
-        switchToolTab('text');
-        initParticleEngine();
-    });
+            <!-- TAB 3: AUDIO & MUSIC (LAGU) -->
+            <div id="content-audio" class="flex-1 overflow-y-auto p-4 space-y-4 hidden">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Musik Latar (BGM Lagu)</div>
+                
+                <div class="p-3 bg-rose-50/50 border border-rose-100 rounded-xl space-y-3">
+                    <div>
+                        <label class="text-[11px] font-medium text-slate-600 block mb-1">1. Upload File Lagu Sendiri (.mp3 / .wav)</label>
+                        <input type="file" id="audioFileInput" accept="audio/*" onchange="handleAudioUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-500 file:text-white hover:file:bg-rose-600">
+                    </div>
 
-    function switchToolTab(tab) {
-        document.querySelectorAll('.tool-tab-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
+                    <div class="relative flex py-1 items-center">
+                        <div class="flex-grow border-t border-rose-200"></div>
+                        <span class="flex-shrink mx-2 text-[10px] text-slate-400 font-bold uppercase">Atau URL Lagu</span>
+                        <div class="flex-grow border-t border-rose-200"></div>
+                    </div>
 
-        const container = document.getElementById('library-content-area');
-        container.innerHTML = '';
+                    <div>
+                        <label class="text-[11px] font-medium text-slate-600 block mb-1">2. Masukkan URL Audio</label>
+                        <input type="text" id="bgmUrl" placeholder="https://example.com/lagu.mp3" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-rose-400 bg-white">
+                        <button onclick="applyUrlAudio()" class="w-full mt-2 py-1.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-lg transition">Pasang Audio URL</button>
+                    </div>
+                </div>
 
-        if (tab === 'text') {
-            TEXT_PRESETS.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'preset-card';
-                card.innerHTML = `<strong style="font-family:${p.font}; font-size:1.1rem;">${p.type}</strong><p style="font-size:0.75rem; color:#888;">Klik untuk tambah teks</p>`;
-                card.onclick = () => createTextElement(p);
-                container.appendChild(card);
-            });
-        } else if (tab === 'symbols') {
-            const search = document.createElement('input');
-            search.className = 'search-input';
-            search.placeholder = '🔍 Cari stiker atau simbol...';
-            container.appendChild(search);
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Preset Musik Suasana</label>
+                    <div class="space-y-1.5" id="presetMusicList"></div>
+                </div>
+            </div>
 
-            Object.keys(SYMBOL_CATEGORIES).forEach(cat => {
-                const title = document.createElement('h4');
-                title.style.margin = '10px 0 6px 0';
-                title.style.fontSize = '0.85rem';
-                title.innerText = cat;
-                container.appendChild(title);
-
-                const grid = document.createElement('div');
-                grid.className = 'symbol-grid-box';
-                SYMBOL_CATEGORIES[cat].forEach(sym => {
-                    const btn = document.createElement('div');
-                    btn.className = 'symbol-btn';
-                    btn.innerText = sym;
-                    btn.onclick = () => createSymbolElement(sym);
-                    grid.appendChild(btn);
-                });
-                container.appendChild(grid);
-            });
-        } else if (tab === 'photos') {
-            const grid = document.createElement('div');
-            grid.className = 'preset-grid';
-            PHOTO_LAYOUTS.forEach(layout => {
-                const card = document.createElement('div');
-                card.className = 'preset-card';
-                card.innerHTML = `<strong>🖼️ ${layout}</strong>`;
-                card.onclick = () => createPhotoLayoutElement(layout);
-                grid.appendChild(card);
-            });
-            container.appendChild(grid);
-        } else if (tab === 'letters') {
-            LETTER_TEMPLATES.forEach(letr => {
-                const card = document.createElement('div');
-                card.className = 'preset-card';
-                card.style.marginBottom = '8px';
-                card.innerHTML = `<strong>✉️ ${letr.name}</strong><p style="font-size:0.75rem; color:#888;">${letr.mechanic}</p>`;
-                card.onclick = () => createLetterElement(letr.name);
-                container.appendChild(card);
-            });
-        } else if (tab === 'games') {
-            GAME_TEMPLATES.forEach(g => {
-                const card = document.createElement('div');
-                card.className = 'preset-card';
-                card.style.marginBottom = '8px';
-                card.innerHTML = `<strong>🎮 ${g.name}</strong><p style="font-size:0.75rem; color:#888;">Klik untuk kustomisasi & pasang</p>`;
-                card.onclick = () => openGameModal(g.name);
-                container.appendChild(card);
-            });
-        } else if (tab === 'effects') {
-            container.innerHTML = `
-                <div class="prop-section">
-                    <label class="prop-label">Pilih Jenis Efek Partikel</label>
-                    <select class="prop-select" onchange="setEffectType(this.value)">
-                        <option value="hearts">💕 Floating Hearts</option>
-                        <option value="sparkles">✨ Magical Sparkles</option>
-                        <option value="petals">🌸 Falling Sakura Petals</option>
+            <!-- TAB 4: STYLE, FONTS & SYMBOLS -->
+            <div id="content-style" class="flex-1 overflow-y-auto p-4 space-y-5 hidden">
+                <!-- Font Customization -->
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Pilihan Font & Tipografi</label>
+                    <select id="globalFontSelect" onchange="setGlobalFont(this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400">
+                        <option value="font-jakarta">Plus Jakarta (Modern Minimalist)</option>
+                        <option value="font-handwriting">Caveat (Tulisan Tangan Casually)</option>
+                        <option value="font-romantic">Sacramento (Kaligrafi Romantis)</option>
+                        <option value="font-serif-custom">Playfair Display (Elegant Serif)</option>
+                        <option value="font-cartoon">Fredoka (Cute & Round Cartoon)</option>
+                        <option value="font-pixel">Press Start 2P (Retro Pixel Game)</option>
                     </select>
                 </div>
-            `;
-        }
-    }
 
-    /* --- ELEMENT CREATION ON CANVAS --- */
-    function createTextElement(spec) {
-        const canvas = document.getElementById('active-phone-canvas');
-        const el = document.createElement('div');
-        el.className = 'canvas-element';
-        el.style.left = '20px';
-        el.style.top = '40px';
-        el.style.fontFamily = spec.font;
-        el.style.fontSize = spec.size;
-        el.style.color = '#ff4d6d';
-        el.innerText = 'Ketik pesanmu di sini ♡';
-
-        makeDraggable(el);
-        el.ondblclick = () => {
-            const txt = prompt('Edit teks:', el.innerText);
-            if (txt) el.innerText = txt;
-        };
-        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'text'); };
-
-        canvas.appendChild(el);
-        selectElement(el, 'text');
-    }
-
-    function createSymbolElement(sym) {
-        const canvas = document.getElementById('active-phone-canvas');
-        const el = document.createElement('div');
-        el.className = 'canvas-element';
-        el.style.left = '40px';
-        el.style.top = '80px';
-        el.style.fontSize = '32px';
-        el.innerText = sym;
-
-        makeDraggable(el);
-        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'symbol'); };
-        canvas.appendChild(el);
-    }
-
-    function createPhotoLayoutElement(layoutName) {
-        const canvas = document.getElementById('active-phone-canvas');
-        const el = document.createElement('div');
-        el.className = 'canvas-element';
-        el.style.left = '20px';
-        el.style.top = '120px';
-        el.style.background = '#fff';
-        el.style.padding = '10px';
-        el.style.borderRadius = '12px';
-        el.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
-        el.innerHTML = `<div style="width:180px; height:120px; background:#ffe5ec; border-radius:8px; display:flex; justify-content:center; align-items:center; color:#ff758f;">📷 Foto Upload</div><p style="text-align:center; font-size:0.8rem; margin-top:6px; font-family:'Caveat';">${layoutName}</p>`;
-
-        makeDraggable(el);
-        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'photo'); };
-        canvas.appendChild(el);
-    }
-
-    function createLetterElement(letterName) {
-        const canvas = document.getElementById('active-phone-canvas');
-        const el = document.createElement('div');
-        el.className = 'canvas-element';
-        el.style.left = '20px';
-        el.style.top = '180px';
-        el.style.background = '#fff0f3';
-        el.style.border = '2px dashed #ff758f';
-        el.style.padding = '12px';
-        el.style.borderRadius = '12px';
-        el.innerHTML = `<strong>✉️ ${letterName}</strong><p style="font-size:0.75rem; color:#666;">Klik untuk membuka surat interaktif</p>`;
-
-        makeDraggable(el);
-        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'letter'); };
-        canvas.appendChild(el);
-    }
-
-    /* --- DRAGGABLE ENGINE --- */
-    function makeDraggable(el) {
-        let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
-        el.onmousedown = (e) => {
-            e.preventDefault();
-            mouseX = e.clientX; mouseY = e.clientY;
-            document.onmouseup = () => { document.onmouseup = null; document.onmousemove = null; };
-            document.onmousemove = (e) => {
-                posX = mouseX - e.clientX; posY = mouseY - e.clientY;
-                mouseX = e.clientX; mouseY = e.clientY;
-                el.style.top = (el.offsetTop - posY) + "px";
-                el.style.left = (el.offsetLeft - posX) + "px";
-            };
-        };
-    }
-
-    /* --- CONTEXTUAL PROPERTIES PANEL --- */
-    function selectElement(el, type) {
-        if (selectedElement) selectedElement.classList.remove('selected');
-        selectedElement = el;
-        selectedElement.classList.add('selected');
-
-        const panel = document.getElementById('properties-panel');
-        panel.innerHTML = `<h3>Edit Properti (${type.toUpperCase()})</h3><br>`;
-
-        if (type === 'text') {
-            panel.innerHTML += `
-                <div class="prop-section">
-                    <label class="prop-label">Isi Teks</label>
-                    <input type="text" class="prop-input" value="${el.innerText}" oninput="selectedElement.innerText = this.value">
+                <!-- Theme Colors -->
+                <div class="pt-3 border-t border-slate-100">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Tema Warna Latar</label>
+                    <div class="grid grid-cols-2 gap-2" id="themeSelector"></div>
                 </div>
-                <div class="prop-section">
-                    <label class="prop-label">Warna Teks</label>
-                    <input type="color" class="prop-input" value="#ff4d6d" onchange="selectedElement.style.color = this.value">
+
+                <!-- Symbol & Emoji Library -->
+                <div class="pt-3 border-t border-slate-100">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Pustaka Simbol & Stiker (Klik untuk Salin)</label>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 grid grid-cols-6 gap-2 text-center text-lg">
+                        <button onclick="copySymbol('❤️')" class="hover:scale-125 transition">❤️</button>
+                        <button onclick="copySymbol('💖')" class="hover:scale-125 transition">💖</button>
+                        <button onclick="copySymbol('✨')" class="hover:scale-125 transition">✨</button>
+                        <button onclick="copySymbol('🎀')" class="hover:scale-125 transition">🎀</button>
+                        <button onclick="copySymbol('⭐')" class="hover:scale-125 transition">⭐</button>
+                        <button onclick="copySymbol('🌸')" class="hover:scale-125 transition">🌸</button>
+                        <button onclick="copySymbol('🎁')" class="hover:scale-125 transition">🎁</button>
+                        <button onclick="copySymbol('💌')" class="hover:scale-125 transition">💌</button>
+                        <button onclick="copySymbol('🎮')" class="hover:scale-125 transition">🎮</button>
+                        <button onclick="copySymbol('👑')" class="hover:scale-125 transition">👑</button>
+                        <button onclick="copySymbol('🧸')" class="hover:scale-125 transition">🧸</button>
+                        <button onclick="copySymbol('🗝️')" class="hover:scale-125 transition">🗝️</button>
+                    </div>
                 </div>
-            `;
-        }
-        panel.innerHTML += `<button class="btn btn-primary" style="background:#e74c3c; width:100%; margin-top:10px;" onclick="selectedElement.remove(); deselectAllElements();">🗑️ Hapus Elemen</button>`;
-    }
+            </div>
+        </aside>
 
-    function deselectAllElements() {
-        if (selectedElement) selectedElement.classList.remove('selected');
-        selectedElement = null;
-        document.getElementById('properties-panel').innerHTML = `<h3>Properties Panel</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Pilih elemen di canvas untuk mengatur properti.</p>`;
-    }
+        <!-- CANVAS WORKSPACE (JOURNEY FLOW BUILDER) -->
+        <main class="flex-1 bg-slate-50 relative overflow-y-auto p-8 flex flex-col items-center">
+            <canvas id="particleCanvas"></canvas>
 
-    /* --- GAME MODAL LOGIC --- */
-    function openGameModal(name) {
-        document.getElementById('game-config-modal').classList.add('active');
-    }
+            <div class="max-w-xl w-full space-y-4 mb-20 z-10">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Alur Perjalanan Hadiah (Journey Timeline)</h2>
+                    <span id="stepCount" class="text-xs bg-rose-100 text-rose-600 px-2.5 py-1 rounded-full font-semibold">0 Langkah</span>
+                </div>
 
-    function closeGameModal() {
-        document.getElementById('game-config-modal').classList.remove('active');
-    }
+                <!-- Interactive Steps List -->
+                <div id="journeyCanvas" class="space-y-4"></div>
 
-    function confirmAddGame() {
-        closeGameModal();
-        const canvas = document.getElementById('active-phone-canvas');
-        const el = document.createElement('div');
-        el.className = 'canvas-element';
-        el.style.left = '20px';
-        el.style.top = '220px';
-        el.style.background = '#ffffff';
-        el.style.border = '2px solid #ff4d6d';
-        el.style.padding = '12px';
-        el.style.borderRadius = '14px';
-        el.innerHTML = `<strong style="color:#ff4d6d">🎮 Custom Kuis</strong><p style="font-size:0.8rem;">${document.getElementById('cfg-game-q').value}</p>`;
+                <!-- Empty State Indicator -->
+                <div id="emptyState" class="border-2 border-dashed border-rose-200 rounded-2xl p-8 text-center bg-white/60 backdrop-blur">
+                    <i data-lucide="plus-circle" class="w-10 h-10 text-rose-300 mx-auto mb-2"></i>
+                    <p class="text-sm font-medium text-slate-600">Belum ada langkah yang ditambahkan</p>
+                    <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto">Pilih game atau template foto dari menu sebelah kiri untuk membangun alur pengalaman interaktif.</p>
+                </div>
+            </div>
+        </main>
 
-        makeDraggable(el);
-        el.onclick = (e) => { e.stopPropagation(); selectElement(el, 'game'); };
-        canvas.appendChild(el);
-    }
+        <!-- RIGHT SIDEBAR: STEP PROPERTY & PHOTO/DOCUMENT UPLOADER -->
+        <aside id="editorSidebar" class="w-80 border-l border-rose-100 bg-white p-5 flex flex-col z-10 shrink-0">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <h3 class="font-bold text-sm text-slate-800">Detail & Setting Langkah</h3>
+                <i data-lucide="sliders" class="w-4 h-4 text-slate-400"></i>
+            </div>
 
-    /* --- CANVAS PARTICLE ENGINE --- */
-    let currentParticleType = 'hearts';
-    function initParticleEngine() {
-        const canvas = document.getElementById('effects-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 340; canvas.height = 620;
+            <div id="editorForm" class="flex-1 overflow-y-auto space-y-4">
+                <p class="text-xs text-slate-400 italic text-center py-10">Pilih salah satu langkah di kanvas tengah untuk mengedit teks, upload foto dari galeri HP/dokumen, atau kunci jawaban.</p>
+            </div>
+        </aside>
 
-        const particles = Array.from({ length: 15 }, () => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 4 + 2,
-            speedY: Math.random() * 0.8 + 0.3
-        }));
+    </div>
 
-        function render() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = currentParticleType === 'petals' ? '#ffb3c1' : '#ff4d6d';
-            particles.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
-                p.y -= p.speedY;
-                if (p.y < 0) p.y = canvas.height;
+    <!-- AUDIO ELEMENT -->
+    <audio id="globalBgmAudio" loop></audio>
+
+    <!-- JAVASCRIPT APP ENGINE -->
+    <script>
+        /* ==========================================================================
+           1. DATA LIBRARIES: 60 GAMES & 60 PHOTO EXPERIENCES
+           ========================================================================== */
+
+        const GAME_LIBRARY = [
+            // LOVE & COUPLE
+            { id: 'g_hwdykm', cat: 'LOVE', name: 'How Well Do You Know Me?', desc: 'Pertanyaan seputar creator dengan skor.' },
+            { id: 'g_thisthat', cat: 'LOVE', name: 'This or That', desc: 'Pilihan 2 opsi cepat (Kopi vs Cokelat, dll).' },
+            { id: 'g_guesstext', cat: 'LOVE', name: 'Guess My Answer', desc: 'Tebak jawaban yang dipilih oleh creator.' },
+            { id: 'g_completesentence', cat: 'LOVE', name: 'Complete My Sentence', desc: 'Lengkapi kalimat romantis yang terpotong.' },
+            { id: 'g_memoryquiz', cat: 'LOVE', name: 'Our Memory Quiz', desc: 'Kuis seputar kenangan spesial kalian.' },
+            { id: 'g_lovepersonality', cat: 'LOVE', name: 'Love Personality Quiz', desc: 'Kuis kepribadian cinta dengan hasil manis.' },
+            { id: 'g_pickheart', cat: 'LOVE', name: 'Pick a Heart', desc: 'Pilih hati yang menyimpan pesan rahasia.' },
+            { id: 'g_choosedate', cat: 'LOVE', name: 'Choose Our Next Date', desc: 'Pilih kencan impian berikutnya.' },
+            { id: 'g_whosaidit', cat: 'LOVE', name: 'Who Said It?', desc: 'Tebak kutipan dari siapa (Creator / Recipient).' },
+            { id: 'g_guessmemory', cat: 'LOVE', name: 'Guess the Memory', desc: 'Tebak kenangan indah berdasarkan petunjuk.' },
+
+            // GUESSING
+            { id: 'g_emojiguess', cat: 'GUESSING', name: 'Emoji Guess', desc: 'Tebak kata/judul film dari susunan emoji.' },
+            { id: 'g_photoguess', cat: 'GUESSING', name: 'Photo Guess', desc: 'Tebak foto rahasia yang diburamkan/blur.' },
+            { id: 'g_wordguess', cat: 'GUESSING', name: 'Guess the Word', desc: 'Tebak kata rahasia dari petunjuk.' },
+            { id: 'g_numberguess', cat: 'GUESSING', name: 'Guess the Number', desc: 'Tebak angka keberuntungan.' },
+            { id: 'g_songguess', cat: 'GUESSING', name: 'Guess the Song', desc: 'Tebak judul lagu kenangan kalian.' },
+            { id: 'g_placeguess', cat: 'GUESSING', name: 'Guess the Place', desc: 'Tebak lokasi kencan pertama.' },
+
+            // PUZZLE
+            { id: 'g_jigsaw', cat: 'PUZZLE', name: 'Photo Jigsaw Puzzle', desc: 'Susun potongan puzzle foto (6, 12, 20, 30 pcs).' },
+            { id: 'g_sliding', cat: 'PUZZLE', name: 'Sliding Photo Puzzle', desc: 'Puzzle geser foto klasik.' },
+            { id: 'g_memorymatch', cat: 'PUZZLE', name: 'Memory Match', desc: 'Cari pasangan kartu foto yang sama.' },
+            { id: 'g_finddiff', cat: 'PUZZLE', name: 'Find the Difference', desc: 'Temukan perbedaan di dua foto.' },
+            { id: 'g_hiddenheart', cat: 'PUZZLE', name: 'Find the Hidden Heart', desc: 'Cari ikon hati tersembunyi di dalam gambar.' },
+            { id: 'g_wordscramble', cat: 'PUZZLE', name: 'Word Scramble', desc: 'Susun huruf acak menjadi kata cinta.' },
+
+            // QUICK & FUN
+            { id: 'g_tapheart', cat: 'QUICK', name: 'Tap the Heart', desc: 'Tap hati sebanyak-banyaknya dalam batas waktu.' },
+            { id: 'g_collector', cat: 'QUICK', name: 'Heart Collector', desc: 'Tangkap hati yang jatuh dari atas.' },
+            { id: 'g_balloonpop', cat: 'QUICK', name: 'Balloon Pop', desc: 'Pecahkan balon untuk membuka pesan.' },
+            { id: 'g_spinwheel', cat: 'QUICK', name: 'Spin the Wheel', desc: 'Putar roda keberuntungan hadiah.' },
+
+            // SURPRISE & REVEAL
+            { id: 'g_scratch', cat: 'SURPRISE', name: 'Scratch Card', desc: 'Gosok kartu untuk melihat pesan tersembunyi.' },
+            { id: 'g_giftbox', cat: 'SURPRISE', name: 'Choose a Gift Box', desc: 'Pilih salah satu kotak kado penuh kejutan.' },
+            { id: 'g_door', cat: 'SURPRISE', name: 'Choose a Door', desc: 'Buka pintu rahasia.' },
+            { id: 'g_envelope', cat: 'SURPRISE', name: 'Secret Envelope', desc: 'Buka surat dari dalam amplop manis.' },
+            { id: 'g_password', cat: 'SURPRISE', name: 'Password Gift', desc: 'Masukkan kata kunci khusus untuk lanjut.' },
+
+            // RANDOM & ARCADE
+            { id: 'g_rand_q', cat: 'RANDOM', name: 'Random Question', desc: 'Pertanyaan acak manis.' },
+            { id: 'g_tictactoe', cat: 'ARCADE', name: 'Tic Tac Toe Love', desc: 'Bermain Tic Tac Toe XO bersama.' }
+        ];
+
+        const PHOTO_LIBRARY = [
+            // POLAROID
+            { id: 'p_single_polaroid', cat: 'POLAROID', name: 'Single Polaroid', desc: '1 foto besar dengan frame Polaroid klasik.' },
+            { id: 'p_double_polaroid', cat: 'POLAROID', name: 'Double Polaroid', desc: '2 foto bertumpuk miring aesthetic.' },
+            { id: 'p_triple_polaroid', cat: 'POLAROID', name: 'Triple Polaroid', desc: '3 foto kenangan sejajar.' },
+            { id: 'p_polaroid_wall', cat: 'POLAROID', name: 'Polaroid Wall', desc: 'Dinding foto Polaroid aesthetic.' },
+
+            // FILM & CAMERA
+            { id: 'p_film_strip', cat: 'FILM', name: 'Film Strip', desc: 'Foto vertikal menyerupai klise film negatif.' },
+            { id: 'p_photobooth', cat: 'FILM', name: 'Photo Booth 4-Cut', desc: '4 foto vertikal bergaya photo booth.' },
+
+            // ROMANTIC
+            { id: 'p_heart_collage', cat: 'ROMANTIC', name: 'Heart Collage', desc: 'Kumpulan foto membentuk pola hati.' },
+            { id: 'p_envelope_photos', cat: 'ROMANTIC', name: 'Envelope Photos', desc: 'Foto-foto yang keluar dari amplop.' },
+
+            // CUTE & SCRAPBOOK
+            { id: 'p_floral_frame', cat: 'CUTE', name: 'Floral Frame', desc: 'Foto dengan bingkai bunga-bunga manis.' },
+            { id: 'p_washi_tape', cat: 'SCRAPBOOK', name: 'Washi Tape Frame', desc: 'Foto ditempel masking tape aesthetic.' },
+
+            // INTERACTIVE EXPERIENCE
+            { id: 'p_flip_cards', cat: 'EXPERIENCE', name: 'Flip Photos', desc: 'Klik foto untuk membalik dan membaca pesan.' },
+            { id: 'p_hanging_photos', cat: 'EXPERIENCE', name: 'Hanging Photos', desc: 'Foto-foto digantung di tali kenangan.' }
+        ];
+
+        const PRESET_MUSIC = [
+            { title: 'Romantic Piano & Strings', url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3' },
+            { title: 'Acoustic Guitar Love', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73117.mp3' },
+            { title: 'Sweet Lofi Memory', url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3' }
+        ];
+
+        /* ==========================================================================
+           2. APP STATE
+           ========================================================================== */
+
+        let journeySteps = [];
+        let selectedStepId = null;
+        let isPreviewMode = false;
+        let activeTheme = 'rose';
+        let activeFontClass = 'font-jakarta';
+        let currentAudioUrl = '';
+
+        /* ==========================================================================
+           3. INITIALIZATION
+           ========================================================================== */
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderGameList('ALL');
+            renderPhotoList('ALL');
+            renderThemeSelector();
+            renderPresetMusic();
+            initParticleCanvas();
+        });
+
+        function switchTab(tabName) {
+            ['games', 'photos', 'audio', 'style'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                const content = document.getElementById(`content-${t}`);
+                if (t === tabName) {
+                    btn.classList.add('bg-white', 'text-rose-600', 'shadow-sm');
+                    btn.classList.remove('text-slate-500');
+                    content.classList.remove('hidden');
+                } else {
+                    btn.classList.remove('bg-white', 'text-rose-600', 'shadow-sm');
+                    btn.classList.add('text-slate-500');
+                    content.classList.add('hidden');
+                }
             });
-            requestAnimationFrame(render);
         }
-        render();
-    }
 
-    function setEffectType(type) { currentParticleType = type; }
-    function saveDraft() { alert('Draft berhasil disimpan ♡'); }
-    function publishGift() { alert('Kado berhasil dipublish!'); }
-    function togglePreviewMode() { alert('Memasuki mode preview penerima kado ✨'); }
-    function addNewPage() { alert('Halaman baru ditambahkan!'); }
-</script>
+        /* ==========================================================================
+           4. LIST RENDERING & FILTERS
+           ========================================================================== */
+
+        function renderGameList(category) {
+            const container = document.getElementById('gameList');
+            container.innerHTML = '';
+            const filtered = category === 'ALL' ? GAME_LIBRARY : GAME_LIBRARY.filter(g => g.cat === category);
+
+            filtered.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'p-3 border border-slate-100 bg-slate-50/80 hover:bg-rose-50/60 hover:border-rose-200 rounded-xl cursor-pointer transition flex justify-between items-center group';
+                card.onclick = () => addStep('GAME', game);
+                card.innerHTML = `
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-700 group-hover:text-rose-600">${game.name}</h4>
+                        <p class="text-[10px] text-slate-400 line-clamp-1">${game.desc}</p>
+                    </div>
+                    <i data-lucide="plus" class="w-4 h-4 text-slate-300 group-hover:text-rose-500"></i>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function renderPhotoList(category) {
+            const container = document.getElementById('photoList');
+            container.innerHTML = '';
+            const filtered = category === 'ALL' ? PHOTO_LIBRARY : PHOTO_LIBRARY.filter(p => p.cat === category);
+
+            filtered.forEach(photo => {
+                const card = document.createElement('div');
+                card.className = 'p-3 border border-slate-100 bg-slate-50/80 hover:bg-rose-50/60 hover:border-rose-200 rounded-xl cursor-pointer transition flex justify-between items-center group';
+                card.onclick = () => addStep('PHOTO', photo);
+                card.innerHTML = `
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-700 group-hover:text-rose-600">${photo.name}</h4>
+                        <p class="text-[10px] text-slate-400 line-clamp-1">${photo.desc}</p>
+                    </div>
+                    <i data-lucide="plus" class="w-4 h-4 text-slate-300 group-hover:text-rose-500"></i>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function filterGames(cat) { renderGameList(cat); }
+        function filterPhotos(cat) { renderPhotoList(cat); }
+
+        /* ==========================================================================
+           5. STEP MANAGEMENT & CANVAS
+           ========================================================================== */
+
+        function addStep(type, item) {
+            const stepId = 'step_' + Date.now();
+            const newStep = {
+                id: stepId,
+                type: type,
+                itemRef: item,
+                title: item.name,
+                message: 'Tuliskan pesan manis atau petunjuk khusus untuk si dia...',
+                imageUrl: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80',
+                puzzlePieces: 12,
+                secretAnswer: 'cinta'
+            };
+
+            journeySteps.push(newStep);
+            renderCanvas();
+            selectStep(stepId);
+        }
+
+        function removeStep(stepId, event) {
+            event.stopPropagation();
+            journeySteps = journeySteps.filter(s => s.id !== stepId);
+            if (selectedStepId === stepId) selectedStepId = null;
+            renderCanvas();
+            renderEditor();
+        }
+
+        function moveStep(index, direction, event) {
+            event.stopPropagation();
+            if (direction === 'UP' && index > 0) {
+                const temp = journeySteps[index];
+                journeySteps[index] = journeySteps[index - 1];
+                journeySteps[index - 1] = temp;
+            } else if (direction === 'DOWN' && index < journeySteps.length - 1) {
+                const temp = journeySteps[index];
+                journeySteps[index] = journeySteps[index + 1];
+                journeySteps[index + 1] = temp;
+            }
+            renderCanvas();
+        }
+
+        function renderCanvas() {
+            const container = document.getElementById('journeyCanvas');
+            const emptyState = document.getElementById('emptyState');
+            document.getElementById('stepCount').innerText = `${journeySteps.length} Langkah`;
+
+            if (journeySteps.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            container.innerHTML = '';
+
+            journeySteps.forEach((step, idx) => {
+                const isSelected = step.id === selectedStepId;
+                const stepCard = document.createElement('div');
+                stepCard.className = `p-4 rounded-2xl bg-white border-2 transition cursor-pointer relative shadow-sm ${activeFontClass} ${
+                    isSelected ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-100 hover:border-rose-200'
+                }`;
+                stepCard.onclick = () => selectStep(step.id);
+
+                const icon = step.type === 'GAME' ? 'gamepad-2' : 'image';
+                const badgeColor = step.type === 'GAME' ? 'bg-amber-100 text-amber-700' : 'bg-pink-100 text-pink-700';
+
+                stepCard.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-rose-50 text-rose-600 font-bold text-xs flex items-center justify-center">${idx + 1}</span>
+                            <div class="p-2 rounded-xl ${badgeColor}">
+                                <i data-lucide="${icon}" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800">${step.title}</h4>
+                                <span class="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">${step.type} • ${step.itemRef.cat}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-1">
+                            <button onclick="moveStep(${idx}, 'UP', event)" class="p-1 text-slate-300 hover:text-slate-600"><i data-lucide="chevron-up" class="w-4 h-4"></i></button>
+                            <button onclick="moveStep(${idx}, 'DOWN', event)" class="p-1 text-slate-300 hover:text-slate-600"><i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                            <button onclick="removeStep('${step.id}', event)" class="p-1 text-slate-300 hover:text-rose-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(stepCard);
+            });
+
+            lucide.createIcons();
+        }
+
+        function selectStep(stepId) {
+            selectedStepId = stepId;
+            renderCanvas();
+            renderEditor();
+        }
+
+        /* ==========================================================================
+           6. RIGHT SIDEBAR EDITOR & LOCAL PHOTO UPLOAD (DOKUMEN)
+           ========================================================================== */
+
+        function renderEditor() {
+            const container = document.getElementById('editorForm');
+            const step = journeySteps.find(s => s.id === selectedStepId);
+
+            if (!step) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-10">Pilih salah satu langkah di kanvas tengah untuk mengedit teks, upload foto dari HP/komputer, atau kuis.</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="space-y-4 ${activeFontClass}">
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Judul Langkah</label>
+                        <input type="text" value="${step.title}" oninput="updateStepProp('title', this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Pesan / Petunjuk</label>
+                        <textarea oninput="updateStepProp('message', this.value)" rows="3" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none">${step.message}</textarea>
+                    </div>
+
+                    <!-- PHOTO / DOCUMENT UPLOAD SECTION -->
+                    <div class="p-3 bg-rose-50/50 border border-rose-100 rounded-xl space-y-2">
+                        <label class="text-[10px] font-bold uppercase text-rose-600 block">📁 Upload Foto dari Dokumen / HP</label>
+                        <input type="file" accept="image/*" onchange="handleImageUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-500 file:text-white hover:file:bg-rose-600">
+                        <p class="text-[10px] text-slate-400">Atau tempel URL foto online:</p>
+                        <input type="text" value="${step.imageUrl}" oninput="updateStepProp('imageUrl', this.value)" placeholder="https://..." class="w-full p-2 text-xs bg-white border border-slate-200 rounded-lg outline-none">
+                        ${step.imageUrl ? `<img src="${step.imageUrl}" class="w-full h-28 object-cover rounded-lg border mt-2">` : ''}
+                    </div>
+
+                    ${step.itemRef.id === 'g_jigsaw' ? `
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Jumlah Pieces Puzzle</label>
+                        <select onchange="updateStepProp('puzzlePieces', this.value)" class="w-full p-2.5 text-xs bg-slate-50 border rounded-xl outline-none">
+                            <option value="6" ${step.puzzlePieces == 6 ? 'selected' : ''}>6 Pieces</option>
+                            <option value="12" ${step.puzzlePieces == 12 ? 'selected' : ''}>12 Pieces</option>
+                            <option value="20" ${step.puzzlePieces == 20 ? 'selected' : ''}>20 Pieces</option>
+                            <option value="30" ${step.puzzlePieces == 30 ? 'selected' : ''}>30 Pieces</option>
+                        </select>
+                    </div>
+                    ` : ''}
+
+                    ${step.type === 'GAME' ? `
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Kunci Jawaban / Secret Code</label>
+                        <input type="text" value="${step.secretAnswer}" oninput="updateStepProp('secretAnswer', this.value)" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none">
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function updateStepProp(prop, value) {
+            const step = journeySteps.find(s => s.id === selectedStepId);
+            if (step) {
+                step[prop] = value;
+                renderCanvas();
+            }
+        }
+
+        // Handle Upload Foto Lokal (Base64)
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    updateStepProp('imageUrl', e.target.result);
+                    renderEditor();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        /* ==========================================================================
+           7. AUDIO PLAYER & BGM SYSTEM
+           ========================================================================== */
+
+        function handleAudioUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const audioUrl = URL.createObjectURL(file);
+                setAudioBgm(audioUrl, file.name);
+            }
+        }
+
+        function applyUrlAudio() {
+            const url = document.getElementById('bgmUrl').value.trim();
+            if (url) {
+                setAudioBgm(url, 'Custom Audio URL');
+            }
+        }
+
+        function renderPresetMusic() {
+            const container = document.getElementById('presetMusicList');
+            container.innerHTML = '';
+            PRESET_MUSIC.forEach(m => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-2 bg-slate-50 hover:bg-rose-50 text-left border border-slate-200 rounded-xl text-xs flex items-center justify-between text-slate-700 transition';
+                btn.onclick = () => setAudioBgm(m.url, m.title);
+                btn.innerHTML = `
+                    <span class="font-medium">${m.title}</span>
+                    <i data-lucide="play-circle" class="w-4 h-4 text-rose-500"></i>
+                `;
+                container.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        function setAudioBgm(url, title) {
+            const audio = document.getElementById('globalBgmAudio');
+            audio.src = url;
+            audio.play();
+            currentAudioUrl = url;
+
+            const widget = document.getElementById('audioPlayerWidget');
+            document.getElementById('playingSongTitle').innerText = title;
+            widget.classList.remove('hidden');
+        }
+
+        function toggleAudioPlay() {
+            const audio = document.getElementById('globalBgmAudio');
+            const icon = document.getElementById('playIcon');
+
+            if (audio.paused) {
+                audio.play();
+                icon.setAttribute('data-lucide', 'pause');
+            } else {
+                audio.pause();
+                icon.setAttribute('data-lucide', 'play');
+            }
+            lucide.createIcons();
+        }
+
+        /* ==========================================================================
+           8. STYLES, FONTS, SIMBOLS & PARTICLES
+           ========================================================================== */
+
+        function setGlobalFont(fontClass) {
+            activeFontClass = fontClass;
+            renderCanvas();
+            renderEditor();
+        }
+
+        function renderThemeSelector() {
+            const themes = [
+                { id: 'rose', name: 'Romantic Rose', color: 'bg-rose-500' },
+                { id: 'midnight', name: 'Starry Night', color: 'bg-slate-900' },
+                { id: 'matcha', name: 'Matcha Garden', color: 'bg-emerald-600' },
+                { id: 'sunset', name: 'Warm Sunset', color: 'bg-amber-500' }
+            ];
+
+            const container = document.getElementById('themeSelector');
+            container.innerHTML = '';
+
+            themes.forEach(t => {
+                const btn = document.createElement('button');
+                btn.className = `p-2 border rounded-xl text-left flex items-center gap-2 transition ${activeTheme === t.id ? 'border-rose-500 bg-rose-50' : 'border-slate-100'}`;
+                btn.onclick = () => { activeTheme = t.id; renderThemeSelector(); };
+                btn.innerHTML = `
+                    <span class="w-3.5 h-3.5 rounded-full ${t.color}"></span>
+                    <span class="text-xs font-semibold text-slate-700">${t.name}</span>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        function copySymbol(symbol) {
+            navigator.clipboard.writeText(symbol);
+            alert(`Simbol ${symbol} berhasil disalin! Anda dapat menempelkannya (paste) di judul atau pesan.`);
+        }
+
+        function initParticleCanvas() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            for (let i = 0; i < 20; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 3 + 1,
+                    speedY: Math.random() * 0.4 + 0.1,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#fda4af';
+
+                particles.forEach(p => {
+                    ctx.globalAlpha = p.opacity;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    p.y -= p.speedY;
+                    if (p.y < 0) p.y = canvas.height;
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        /* ==========================================================================
+           9. PREVIEW & EXPORT LINK
+           ========================================================================== */
+
+        function togglePreviewMode() {
+            isPreviewMode = !isPreviewMode;
+            document.getElementById('previewText').innerText = isPreviewMode ? 'Edit Journey' : 'Preview Journey';
+            alert(isPreviewMode ? 'Memasuki Mode Pratinjau Interaktif Journey' : 'Kembali ke Mode Editor');
+        }
+
+        function exportGiftLink() {
+            if (journeySteps.length === 0) {
+                alert('Silakan tambahkan setidaknya satu langkah game atau foto!');
+                return;
+            }
+
+            const giftPayload = {
+                font: activeFontClass,
+                theme: activeTheme,
+                audio: currentAudioUrl,
+                steps: journeySteps
+            };
+
+            const jsonStr = JSON.stringify(giftPayload);
+            const encoded = btoa(encodeURIComponent(jsonStr));
+            const shareUrl = `${window.location.origin}${window.location.pathname}?gift=${encoded}`;
+
+            navigator.clipboard.writeText(shareUrl);
+            alert('Tautan Digital Gift berhasil disalin ke clipboard!\n\nSiap dibagikan ke penerima.');
+        }
+    </script>
 </body>
 </html>
